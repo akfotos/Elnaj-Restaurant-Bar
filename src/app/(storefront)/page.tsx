@@ -1,82 +1,80 @@
 import Link from "next/link";
+import Image from "next/image";
 import { db } from "@/lib/db";
+import { money } from "@/lib/format";
 import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [categories, featured, bestsellers, seasonal] = await Promise.all([
+  const [categories, featured, bestsellers, seasonal, deals] = await Promise.all([
     db.category.findMany({ orderBy: { sortOrder: "asc" } }),
-    db.product.findMany({ where: { isActive: true, isFeatured: true }, take: 4 }),
-    db.product.findMany({ where: { isActive: true, isBestseller: true }, take: 4 }),
-    db.product.findMany({ where: { isActive: true, isSeasonal: true }, take: 4 }),
+    db.product.findMany({ where: { isActive: true, isFeatured: true }, take: 4, orderBy: { name: "asc" } }),
+    db.product.findMany({ where: { isActive: true, isBestseller: true }, take: 4, orderBy: { name: "asc" } }),
+    db.product.findMany({ where: { isActive: true, isSeasonal: true }, take: 4, orderBy: { name: "asc" } }),
+    db.product.findMany({ where: { isActive: true, compareAtPrice: { not: null } }, take: 4, orderBy: { name: "asc" } }),
   ]);
-  const deals = await db.product.findMany({
-    where: { isActive: true, compareAtPrice: { not: null } },
-    take: 4,
-  });
+  const grillImage = "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&q=85";
+  const drinksImage = "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=1000&q=85";
 
   return (
-    <div>
-      <section className="relative bg-gradient-to-br from-brand-50 via-ink-900 to-ink-800 border-b border-black/10">
-        <div className="max-w-6xl mx-auto px-4 py-20 md:py-28">
-          <p className="animate-fade-up text-brand-500 font-semibold tracking-widest uppercase text-sm">Elnaj Restaurant &amp; Bar</p>
-          <h1 className="animate-fade-up mt-3 text-4xl md:text-6xl font-bold max-w-2xl leading-tight" style={{ animationDelay: "80ms" }}>
-            Bold flavors, delivered hot to your door.
-          </h1>
-          <p className="animate-fade-up mt-4 text-stone-500 max-w-xl" style={{ animationDelay: "160ms" }}>
-            Grills, local favorites, small chops and signature cocktails — order for delivery or pickup in minutes.
-          </p>
-          <div className="animate-fade-up mt-8 flex gap-4" style={{ animationDelay: "240ms" }}>
-            <Link href="/menu" className="btn-press bg-brand-500 text-ink-900 font-bold rounded-full px-6 py-3 hover:bg-brand-600">
-              Order Now
-            </Link>
-            <Link href="/track" className="btn-press border border-black/20 rounded-full px-6 py-3 hover:border-brand-500">
-              Track Order
-            </Link>
+    <div className="elnaj-home">
+      <section className="dining-hero" aria-labelledby="hero-title">
+        <Image src={grillImage} alt="Flame-grilled skewers and a colourful spread of fresh food" fill priority sizes="100vw" className="object-cover" />
+        <div className="hero-shade" />
+        <div className="hero-content animate-fade-up">
+          <p className="dining-eyebrow">Welcome to Elnaj Restaurant &amp; Bar</p>
+          <span className="hero-ornament" aria-hidden="true">✦</span>
+          <h1 id="hero-title">Good food.<br /><em>Great company.</em></h1>
+          <p className="hero-description">Bold flavours. Familiar favourites. A little indulgence.<br className="hidden sm:block" /> Discover your next favourite, from our kitchen to your table.</p>
+          <div className="dining-actions">
+            <Link href="/menu" className="dining-button dining-button-light">Explore our menu <span aria-hidden="true">↗</span></Link>
+            <Link href="/food" className="dining-button dining-button-outline">Order online <span aria-hidden="true">↗</span></Link>
+          </div>
+        </div>
+        <div className="hero-bottom"><span>Grills · Local favourites · Signature drinks</span><a href="#our-story">Discover Elnaj <span aria-hidden="true">↓</span></a></div>
+      </section>
+
+      <section id="our-story" className="dining-intro dining-container">
+        <Reveal><p className="dining-eyebrow">A taste of something special</p></Reveal>
+        <Reveal><h2>Rooted in flavour.<br /><em>Made to be enjoyed.</em></h2></Reveal>
+        <Reveal><p className="dining-copy">The warmth of local favourites. The sizzle of the grill. That first sip of something refreshing. At Elnaj, we bring together bold dishes and little moments worth slowing down for.</p></Reveal>
+        <Reveal><Link href="/menu" className="dining-text-link">Find your favourite <span aria-hidden="true">↗</span></Link></Reveal>
+      </section>
+
+      <section className="dining-signatures">
+        <div className="dining-container signature-layout">
+          <Reveal><div className="signature-heading"><p className="dining-eyebrow">From the Elnaj kitchen</p><h2>Our signature<br /><em>flavours.</em></h2><p className="dining-copy">A selection of the dishes and drinks that make our menu unmistakably Elnaj.</p><Link href="/menu" className="dining-text-link">View the full menu <span aria-hidden="true">↗</span></Link></div></Reveal>
+          <div className="signature-list">
+            {featured.length ? featured.map((product, index) => (
+              <Reveal key={product.id} delay={index * 60}>
+                <Link href={`/product/${product.slug}`} className="signature-dish"><div><h3>{product.name}</h3><p>{product.description}</p></div><span>{money(product.price)}</span></Link>
+              </Reveal>
+            )) : <p className="dining-copy">Explore our menu to discover what’s cooking.</p>}
           </div>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 mt-12">
-        <Reveal><h2 className="text-xl font-bold mb-4">Browse Categories</h2></Reveal>
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {categories.map((c) => (
-            <Link
-              key={c.id}
-              href={c.slug === "drinks" ? "/drinks" : `/food?category=${c.slug}`}
-              className="whitespace-nowrap bg-ink-800 border border-black/10 rounded-full px-5 py-2.5 text-sm hover:border-brand-500 hover:text-brand-500"
-            >
-              {c.name}
-            </Link>
+      <section className="dining-container dining-explore">
+        <Reveal><div className="dining-section-heading"><div><p className="dining-eyebrow">Whatever you’re in the mood for</p><h2>Make it <em>an Elnaj moment.</em></h2></div><Link href="/menu" className="dining-text-link">Explore all <span aria-hidden="true">↗</span></Link></div></Reveal>
+        <div className="experience-grid">
+          {[{ title: "From the grill", subtitle: "Fire, spice & everything nice", href: "/food?category=grills", image: grillImage, alt: "Freshly grilled skewers" }, { title: "Raise a glass", subtitle: "Discover our drinks & bar menu", href: "/drinks", image: drinksImage, alt: "A pair of colourful cocktails with citrus garnishes" }].map((item) => (
+            <Link key={item.title} href={item.href} className="experience-card group"><Image src={item.image} alt={item.alt} fill sizes="(max-width: 700px) 100vw, 50vw" className="object-cover img-zoom" /><div className="experience-shade" /><div className="experience-caption"><p className="dining-eyebrow">{item.subtitle}</p><h3>{item.title}</h3><span className="experience-arrow" aria-hidden="true">↗</span></div></Link>
           ))}
         </div>
+        <nav className="dining-categories" aria-label="Menu categories">{categories.map((category) => <Link key={category.id} href={category.slug === "drinks" ? "/drinks" : `/food?category=${category.slug}`}>{category.name} <span aria-hidden="true">↗</span></Link>)}</nav>
       </section>
 
       {[
-        { title: "Featured", items: featured },
-        { title: "Bestsellers", items: bestsellers },
-        { title: "Deals & Promotions", items: deals },
-        { title: "Seasonal Specials", items: seasonal },
-      ].map(
-        (s) =>
-          s.items.length > 0 && (
-            <section key={s.title} className="max-w-6xl mx-auto px-4 mt-14">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold">{s.title}</h2>
-                <Link href="/menu" className="text-sm text-brand-500 hover:underline">View all →</Link>
-              </div>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {s.items.map((p, i) => (
-                  <Reveal key={p.id} delay={i * 60}>
-                    <ProductCard product={p} />
-                  </Reveal>
-                ))}
-              </div>
-            </section>
-          )
-      )}
+        { title: "The favourites", subtitle: "Come back for seconds", items: bestsellers },
+        { title: "A little more to love", subtitle: "Deals & promotions", items: deals },
+        { title: "Something for the season", subtitle: "Fresh picks", items: seasonal },
+      ].map((section) => section.items.length > 0 && (
+        <section key={section.title} className="dining-container dining-products"><Reveal><div className="dining-section-heading"><div><p className="dining-eyebrow">{section.subtitle}</p><h2>{section.title}</h2></div><Link href="/menu" className="dining-text-link">View all <span aria-hidden="true">↗</span></Link></div></Reveal><div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">{section.items.map((product, index) => <Reveal key={product.id} delay={index * 60}><ProductCard product={product} /></Reveal>)}</div></section>
+      ))}
+
+      <section className="dining-closing"><Reveal><p className="dining-eyebrow">Your next good meal starts here</p><h2>A little taste.<br /><em>A lasting impression.</em></h2><p>Enjoy Elnaj your way. Order for delivery or pickup.</p><div className="dining-actions"><Link href="/menu" className="dining-button dining-button-light">Order from our kitchen <span aria-hidden="true">↗</span></Link><Link href="/support" className="dining-button dining-button-outline">Get in touch <span aria-hidden="true">↗</span></Link></div></Reveal></section>
     </div>
   );
 }
