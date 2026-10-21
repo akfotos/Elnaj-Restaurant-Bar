@@ -1,0 +1,37 @@
+import Link from "next/link";
+import { money } from "@/lib/format";
+import type { Product, ProductVariant } from "@prisma/client";
+
+type MenuProduct = Product & { variants: Pick<ProductVariant, "id" | "name" | "price">[] };
+
+export default function MenuTable({ products, categories }: {
+  products: MenuProduct[];
+  categories: { id: string; name: string }[];
+}) {
+  return (
+    <div className="menu-tables">
+      {categories.map((category) => {
+        const dishes = products.filter((product) => product.categoryId === category.id);
+        if (!dishes.length) return null;
+        return (
+          <section key={category.id} className="menu-table-section">
+            <h3>{category.name}</h3>
+            <div className="menu-table-scroll" role="region" aria-label={`${category.name} menu`} tabIndex={0}>
+              <table className="menu-table">
+                <caption className="sr-only">{category.name} — dishes, contents and prices in Ghana cedis</caption>
+                <thead><tr><th scope="col">Dish</th><th scope="col">Description &amp; contents</th><th scope="col">Price (GHS)</th></tr></thead>
+                <tbody>{dishes.map((product) => (
+                  <tr key={product.id}>
+                    <th scope="row"><Link href={`/product/${product.slug}`}>{product.name} <span aria-hidden="true">↗</span></Link>{product.trackStock && product.stock <= 0 && <span className="menu-stock-note">Currently unavailable</span>}</th>
+                    <td><p>{product.description}</p>{product.ingredients && <p className="menu-table-detail"><strong>Ingredients:</strong> {product.ingredients}</p>}{product.allergens && <p className="menu-table-detail"><strong>Allergen information:</strong> {product.allergens}</p>}{product.dietaryLabels && <p className="menu-table-labels">{product.dietaryLabels.split(",").filter(Boolean).join(" · ")}</p>}</td>
+                    <td className="menu-table-price"><span>{money(product.price)}</span><small>{product.unitLabel}</small>{product.variants.map((variant) => <small key={variant.id}>{variant.name}: {money(variant.price)}</small>)}</td>
+                  </tr>
+                ))}</tbody>
+              </table>
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}

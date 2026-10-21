@@ -399,6 +399,35 @@ input, select, textarea {
   .about-next, .policies-content { padding-block: 56px; }
 }
 
+.menu-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding-block: 12px; }
+.menu-view-switch { display: flex; gap: 24px; font-size: 12px; color: #746a60; }
+.menu-view-switch a { padding-block: 10px; border-bottom: 1px solid transparent; }
+.menu-view-switch a[aria-current] { color: #800020; border-color: #800020; }
+.menu-table-section { margin-top: 64px; }
+.menu-table-section h3 { font-family: Georgia, serif; font-size: clamp(1.7rem, 3vw, 2.3rem); margin-bottom: 28px; }
+.menu-table-scroll { overflow-x: auto; }
+.menu-table-scroll:focus-visible { outline: 2px solid #bc8855; outline-offset: 4px; }
+.menu-table { width: 100%; min-width: 580px; border-collapse: collapse; text-align: left; }
+.menu-table thead { border-bottom: 1px solid #cdbcaa; }
+.menu-table thead th { color: #746a60; text-transform: uppercase; letter-spacing: 0.12em; font-size: 10px; font-weight: 500; padding: 0 24px 18px 0; }
+.menu-table tbody tr { border-bottom: 1px solid #e4dcd1; }
+.menu-table tbody th, .menu-table td { padding: 30px 24px 30px 0; vertical-align: top; }
+.menu-table tbody th { width: 28%; font-family: Georgia, serif; font-size: 20px; line-height: 1.5; font-weight: 400; }
+.menu-table tbody th a:hover { color: #800020; }
+.menu-table tbody th a > span { font-family: Arial, sans-serif; font-size: 12px; color: #8b3544; }
+.menu-table td { font-size: 13px; line-height: 1.85; color: #67574b; }
+.menu-table .menu-table-detail { margin-top: 12px; font-size: 12px; color: #746a60; }
+.menu-table-labels { margin-top: 12px; font-size: 10px; letter-spacing: 0.06em; color: #8b3544; }
+.menu-table .menu-table-price { width: 22%; text-align: right; padding-right: 0; color: #800020; white-space: nowrap; }
+.menu-table th:last-child { text-align: right; padding-right: 0; }
+.menu-table-price > span { font-weight: 500; }
+.menu-table-price small { display: block; white-space: normal; font-size: 11px; color: #746a60; margin-top: 6px; }
+.menu-stock-note { display: block; margin-top: 12px; font-family: Arial, sans-serif; font-size: 11px; color: #8b3544; }
+@media (max-width: 700px) {
+  .menu-toolbar { align-items: flex-start; flex-direction: column; gap: 16px; }
+  .menu-table-section { margin-top: 44px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up, .animate-fade-in, .animate-pop, .animate-slide-down, .animate-cart-bump {
     animation: none;

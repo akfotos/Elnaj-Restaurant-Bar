@@ -4,6 +4,8 @@ import DiningInvitation from "@/components/DiningInvitation";
 import { db } from "@/lib/db";
 import ProductCard from "@/components/ProductCard";
 import MenuFilters from "@/components/MenuFilters";
+import MenuTable from "@/components/MenuTable";
+import MenuDownloadButton from "@/components/MenuDownloadButton";
 import Reveal from "@/components/Reveal";
 import type { Prisma } from "@prisma/client";
 
@@ -44,7 +46,7 @@ export default async function Catalog({ searchParams, scope, title }: {
     scope === "drinks" ? { slug: "drinks" } : scope === "food" ? { slug: { not: "drinks" } } : {};
 
   const [products, categories] = await Promise.all([
-    db.product.findMany({ where, orderBy, include: { reviews: { select: { rating: true } } } }),
+    db.product.findMany({ where, orderBy, include: { reviews: { select: { rating: true } }, variants: { orderBy: { price: "asc" } } } }),
     db.category.findMany({ where: categoryWhere, orderBy: { sortOrder: "asc" } }),
   ]);
 
@@ -57,6 +59,13 @@ export default async function Catalog({ searchParams, scope, title }: {
 
   const basePath = scope === "drinks" ? "/drinks" : scope === "food" ? "/food" : "/menu";
   const isBar = scope === "drinks";
+  const view = sp.view === "cards" ? "cards" : "table";
+  const viewHref = (nextView: string) => {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(sp)) if (typeof value === "string") params.set(key, value);
+    params.set("view", nextView);
+    return `${basePath}?${params.toString()}`;
+  };
 
   return (
     <div className="dining-editorial">
@@ -65,14 +74,15 @@ export default async function Catalog({ searchParams, scope, title }: {
       <div className="dining-section-heading"><div><p className="dining-eyebrow">{isBar ? "The Elnaj bar" : "Fresh from our kitchen"}</p><h2>{title}</h2></div><Link href={isBar ? "/food" : "/drinks"} className="dining-text-link">{isBar ? "Find a dish to match" : "Add something to sip"} <span aria-hidden="true">↗</span></Link></div>
       <nav className="catalog-collections" aria-label="Menu collections"><Link href={basePath} aria-current={!category ? "page" : undefined}>All {isBar ? "drinks" : "dishes"}</Link>{categories.map((item) => <Link key={item.id} href={`${basePath}?category=${item.slug}`} aria-current={category === item.slug ? "page" : undefined}>{item.name}</Link>)}</nav>
       <MenuFilters categories={categories} current={{ q, category, tag, sort, minPrice, maxPrice, inStock, minRating }} basePath={scope === "drinks" ? "/drinks" : scope === "food" ? "/food" : "/menu"} />
-      <p className="text-sm text-stone-500 mt-4">{filtered.length} item{filtered.length === 1 ? "" : "s"}</p>
-      <div className="dining-product-grid mt-8">
+      <div className="menu-toolbar"><div className="menu-view-switch" role="group" aria-label="Menu display"><Link href={viewHref("table")} aria-current={view === "table" ? "true" : undefined}>Menu table</Link><Link href={viewHref("cards")} aria-current={view === "cards" ? "true" : undefined}>Photo cards</Link></div><MenuDownloadButton scope={scope} /></div>
+      <p className="text-sm text-stone-500 mt-4">{filtered.length} item{filtered.length === 1 ? "" : "s"} · PDF includes the complete {scope ?? "food and drinks"} menu, not just filtered results.</p>
+      {view === "table" ? <MenuTable products={filtered} categories={categories} /> : <div className="dining-product-grid mt-8">
         {filtered.map((p, i) => (
           <Reveal key={p.id} delay={Math.min(i * 50, 400)}>
             <ProductCard product={p} />
           </Reveal>
         ))}
-      </div>
+      </div>}
       {filtered.length === 0 && (
         <div className="catalog-empty"><h3>A different flavour awaits.</h3><p>No items match these filters. Try another category or start fresh.</p><Link href={basePath} className="dining-text-link">Reset filters <span aria-hidden="true">↗</span></Link></div>
       )}

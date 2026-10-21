@@ -11,6 +11,7 @@ Next.js 15 (App Router) + TypeScript + Tailwind v4 + Prisma 6 + SQLite. Zustand 
 - `npx prisma db push` — sync schema to SQLite (`prisma/dev.db`)
 - `npx tsx prisma/seed.ts` — seed admin user, categories, products, zones, coupons
 - `npx tsc --noEmit` — typecheck
+- `npx tsx --test src/lib/menu-pdf.test.ts` — verify PDF generation, pagination, empty menus and special characters
 
 ## Credentials (dev)
 - Admin: `admin@elnaj.com` / `admin1234` → `/admin`
