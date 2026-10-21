@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export default async function CustomersPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const { q = "" } = await searchParams;
   const users = await db.user.findMany({
-    where: q ? { OR: [{ name: { contains: q } }, { email: { contains: q } }] } : {},
+    where: q ? { OR: [{ name: { contains: q, mode: "insensitive" } }, { email: { contains: q, mode: "insensitive" } }] } : {},
     include: { _count: { select: { orders: true } }, orders: { select: { total: true } } },
     orderBy: { createdAt: "desc" },
   });

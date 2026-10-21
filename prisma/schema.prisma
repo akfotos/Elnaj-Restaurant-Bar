@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -50,7 +50,18 @@ model User {
   orders       Order[]
   reviews      Review[]
   wishlist     WishlistItem[]
+  sessions     Session[]
   supportNotes String?
+}
+
+model Session {
+  id        String   @id // random token stored in the cookie
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Address {

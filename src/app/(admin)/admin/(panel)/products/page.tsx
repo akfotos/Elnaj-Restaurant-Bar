@@ -9,7 +9,7 @@ export default async function AdminProducts({ searchParams }: { searchParams: Pr
   const { q = "", category = "" } = await searchParams;
   const [products, categories] = await Promise.all([
     db.product.findMany({
-      where: { isActive: true, ...(q ? { name: { contains: q } } : {}), ...(category ? { category: { slug: category } } : {}) },
+      where: { isActive: true, ...(q ? { name: { contains: q, mode: "insensitive" } } : {}), ...(category ? { category: { slug: category } } : {}) },
       include: { category: true, variants: true },
       orderBy: { name: "asc" },
     }),

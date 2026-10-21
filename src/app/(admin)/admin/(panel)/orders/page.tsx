@@ -11,7 +11,7 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
   const orders = await db.order.findMany({
     where: {
       ...(status ? { status: status as never } : {}),
-      ...(q ? { OR: [{ orderNumber: { contains: q } }, { guestName: { contains: q } }, { guestEmail: { contains: q } }, { user: { name: { contains: q } } }] } : {}),
+      ...(q ? { OR: [{ orderNumber: { contains: q, mode: "insensitive" } }, { guestName: { contains: q, mode: "insensitive" } }, { guestEmail: { contains: q, mode: "insensitive" } }, { user: { name: { contains: q, mode: "insensitive" } } }] } : {}),
     },
     include: { user: true, items: true },
     orderBy: { createdAt: "desc" },

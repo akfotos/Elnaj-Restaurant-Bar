@@ -24,7 +24,7 @@ export default async function Catalog({ searchParams, scope, title }: {
   const where: Prisma.ProductWhereInput = { isActive: true };
   if (scope === "drinks") where.category = { slug: "drinks" };
   if (scope === "food") where.category = { slug: { not: "drinks" } };
-  if (q) where.OR = [{ name: { contains: q } }, { description: { contains: q } }];
+  if (q) where.OR = [{ name: { contains: q, mode: "insensitive" } }, { description: { contains: q, mode: "insensitive" } }];
   if (category) where.category = { slug: category };
   if (tag) where.dietaryLabels = { contains: tag };
   if (minPrice !== undefined || maxPrice !== undefined)
