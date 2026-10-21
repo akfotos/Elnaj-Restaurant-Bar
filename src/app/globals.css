@@ -232,6 +232,33 @@ input, select, textarea {
 .dining-closing em { color: #e5bf9e; }
 .dining-closing p:not(.dining-eyebrow) { color: #ddc9c8; font-size: 13px; margin-top: 24px; }
 .elnaj-home a:focus-visible { outline: 2px solid #bc8855; outline-offset: 5px; }
+.experience-number { position: absolute; top: 28px; left: 32px; color: #fff8ef; font-size: 11px; letter-spacing: 0.18em; border-bottom: 1px solid #fff6; padding-bottom: 8px; }
+.experience-menu-link { display: inline-block; font-size: 9px; text-transform: uppercase; letter-spacing: 0.14em; margin-top: 20px; border-bottom: 1px solid #fff6; padding-bottom: 6px; max-width: calc(100% - 60px); }
+.experience-card:hover .experience-arrow { background: #f5ecdf; color: #35201b; }
+.dining-bar { display: grid; grid-template-columns: 1fr 1fr; margin-top: 90px; background: #252c25; color: #fff8ef; }
+.bar-image { position: relative; min-height: 620px; }
+.bar-content { padding: 72px clamp(30px, 5vw, 90px); align-self: center; }
+.bar-content .dining-eyebrow { color: #e3c19e; margin-bottom: 22px; }
+.bar-content em { color: #e3c19e; }
+.bar-content .dining-copy { color: #c6c8ba; margin-top: 24px; }
+.bar-menu { margin: 25px 0 30px; }
+.bar-menu a { display: flex; justify-content: space-between; gap: 24px; border-bottom: 1px solid #ffffff26; padding: 17px 0; font-size: 12px; line-height: 1.6; }
+.bar-menu a > span:last-child { color: #e3c19e; white-space: nowrap; }
+.bar-menu a:hover, .bar-content .dining-text-link:hover { color: #e3c19e; }
+.dining-journey { padding-top: 90px; }
+.journey-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.journey-step { border-top: 1px solid #d9cfc1; padding-top: 24px; }
+.journey-number { color: #8b3544; font-size: 11px; letter-spacing: 0.16em; }
+.journey-step h3 { font-family: Georgia, "Times New Roman", serif; font-size: 27px; margin-top: 20px; line-height: 1.2; }
+.journey-step .dining-copy { margin: 16px 0 24px; }
+@media (max-width: 700px) {
+  .dining-bar { grid-template-columns: 1fr; margin-top: 60px; }
+  .bar-image { min-height: 380px; }
+  .bar-content { padding: 48px 24px; }
+  .dining-journey { padding-top: 60px; }
+  .journey-grid { grid-template-columns: 1fr; gap: 32px; }
+  .experience-number { top: 24px; left: 24px; }
+}
 @media (max-width: 700px) {
   .dining-container { padding-inline: 22px; }
   .dining-hero { min-height: 680px; }
