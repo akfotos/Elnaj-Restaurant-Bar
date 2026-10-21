@@ -5,3 +5,5 @@ node_modules
 *.db-journal
 prisma/dev.db
 next-env.d.ts
+.vercel
+.env*

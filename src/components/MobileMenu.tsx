@@ -32,7 +32,7 @@ export default function MobileMenu({ signedIn, isAdmin, name }: { signedIn: bool
       </button>
       {open && (
         <div className="animate-slide-down absolute left-0 right-0 top-full mt-1 mx-3 bg-ink-800 border border-black/10 rounded-2xl shadow-lg overflow-hidden">
-          <nav className="flex flex-col px-4 py-3 text-sm">
+          <nav className="flex flex-col px-4 py-3 text-sm text-stone-800">
             {LINKS.map(([label, href]) => (
               <Link
                 key={href}
