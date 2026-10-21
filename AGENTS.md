@@ -2,6 +2,9 @@
 
 Next.js 15 (App Router) + TypeScript + Tailwind v4 + Prisma 6 + SQLite. Zustand for the client cart (persisted to localStorage).
 
+## Design direction
+- Keep Elnaj’s ivory-and-burgundy identity and editorial typography. Prefer spacious, minimalist layouts with generous gutters, restrained decoration, borderless product cards, and progressive disclosure for secondary controls.
+
 ## Commands
 - `npm run dev` — dev server
 - `npm run build` — production build

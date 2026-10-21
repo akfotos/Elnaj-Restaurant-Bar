@@ -38,12 +38,10 @@ export default async function Home() {
         <div className="hero-shade" />
         <div className="hero-content animate-fade-up">
           <p className="dining-eyebrow">Welcome to Elnaj Restaurant &amp; Bar</p>
-          <span className="hero-ornament" aria-hidden="true">✦</span>
           <h1 id="hero-title">Good food.<br /><em>Great company.</em></h1>
           <p className="hero-description">Bold flavours. Familiar favourites. A little indulgence.<br className="hidden sm:block" /> Discover your next favourite, from our kitchen to your table.</p>
           <div className="dining-actions">
             <Link href="/menu" className="dining-button dining-button-light">Explore our menu <span aria-hidden="true">↗</span></Link>
-            <Link href="/food" className="dining-button dining-button-outline">Order online <span aria-hidden="true">↗</span></Link>
           </div>
         </div>
         <div className="hero-bottom"><span>Grills · Local favourites · Signature drinks</span><a href="#our-story">Discover Elnaj <span aria-hidden="true">↓</span></a></div>
@@ -108,7 +106,7 @@ export default async function Home() {
         { title: "A little more to love", subtitle: "Deals & promotions", items: deals },
         { title: "Something for the season", subtitle: "Fresh picks", items: seasonal },
       ].map((section) => section.items.length > 0 && (
-        <section key={section.title} className="dining-container dining-products"><Reveal><div className="dining-section-heading"><div><p className="dining-eyebrow">{section.subtitle}</p><h2>{section.title}</h2></div><Link href="/menu" className="dining-text-link">View all <span aria-hidden="true">↗</span></Link></div></Reveal><div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">{section.items.map((product, index) => <Reveal key={product.id} delay={index * 60}><ProductCard product={product} /></Reveal>)}</div></section>
+        <section key={section.title} className="dining-container dining-products"><Reveal><div className="dining-section-heading"><div><p className="dining-eyebrow">{section.subtitle}</p><h2>{section.title}</h2></div><Link href="/menu" className="dining-text-link">View all <span aria-hidden="true">↗</span></Link></div></Reveal><div className="dining-product-grid">{section.items.map((product, index) => <Reveal key={product.id} delay={index * 60}><ProductCard product={product} /></Reveal>)}</div></section>
       ))}
 
       <section className="dining-container dining-journey" aria-labelledby="journey-title">

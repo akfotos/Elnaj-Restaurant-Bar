@@ -66,7 +66,7 @@ export default async function Catalog({ searchParams, scope, title }: {
       <nav className="catalog-collections" aria-label="Menu collections"><Link href={basePath} aria-current={!category ? "page" : undefined}>All {isBar ? "drinks" : "dishes"}</Link>{categories.map((item) => <Link key={item.id} href={`${basePath}?category=${item.slug}`} aria-current={category === item.slug ? "page" : undefined}>{item.name}</Link>)}</nav>
       <MenuFilters categories={categories} current={{ q, category, tag, sort, minPrice, maxPrice, inStock, minRating }} basePath={scope === "drinks" ? "/drinks" : scope === "food" ? "/food" : "/menu"} />
       <p className="text-sm text-stone-500 mt-4">{filtered.length} item{filtered.length === 1 ? "" : "s"}</p>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <div className="dining-product-grid mt-8">
         {filtered.map((p, i) => (
           <Reveal key={p.id} delay={Math.min(i * 50, 400)}>
             <ProductCard product={p} />

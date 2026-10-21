@@ -14,15 +14,16 @@ const LINKS = [
 export default function HeaderNav() {
   const pathname = usePathname();
   return (
-    <nav className="hidden xl:flex items-center mx-auto bg-white/10 rounded-full px-1.5 py-1">
+    <nav aria-label="Main navigation" className="hidden xl:flex items-center gap-1 mx-auto px-2 py-1">
       {LINKS.map(([label, href]) => {
         const active = href === "/" ? pathname === "/" : pathname.startsWith(href) || (href === "/menu" && pathname.startsWith("/food"));
         return (
           <Link
             key={href}
             href={href}
-            className={`text-sm rounded-full px-4 py-1.5 transition ${
-              active ? "bg-white text-[#1c1917] font-semibold" : "text-white/75 hover:text-white"
+            aria-current={active ? "page" : undefined}
+            className={`text-sm px-4 py-2 transition ${
+              active ? "text-white underline underline-offset-8 decoration-white/40" : "text-white/60 hover:text-white"
             }`}
           >
             {label}

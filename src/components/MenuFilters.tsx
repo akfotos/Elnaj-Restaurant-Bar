@@ -30,8 +30,10 @@ export default function MenuFilters({
     "bg-ink-800 border border-black/10 rounded-lg px-3 py-2 text-sm focus:border-brand-500";
 
   return (
+    <details className="catalog-filter-panel" open={Boolean(current.q || current.tag || current.minPrice || current.maxPrice || current.inStock || current.sort !== "popular")}>
+    <summary>Search &amp; refine menu</summary>
     <form
-      className="mt-6 flex flex-wrap items-center gap-3"
+      className="mt-4 flex flex-wrap items-center gap-4"
       onSubmit={(e) => {
         e.preventDefault();
         update("q", q);
@@ -99,5 +101,6 @@ export default function MenuFilters({
         Search
       </button>
     </form>
+    </details>
   );
 }
