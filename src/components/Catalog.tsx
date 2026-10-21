@@ -1,3 +1,6 @@
+import Link from "next/link";
+import DiningHero from "@/components/DiningHero";
+import DiningInvitation from "@/components/DiningInvitation";
 import { db } from "@/lib/db";
 import ProductCard from "@/components/ProductCard";
 import MenuFilters from "@/components/MenuFilters";
@@ -52,9 +55,15 @@ export default async function Catalog({ searchParams, scope, title }: {
       })
     : products;
 
+  const basePath = scope === "drinks" ? "/drinks" : scope === "food" ? "/food" : "/menu";
+  const isBar = scope === "drinks";
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold">{title}</h1>
+    <div className="dining-editorial">
+      <DiningHero eyebrow={title} title={isBar ? "Raise a glass." : "Follow your appetite."} accent={isBar ? "Find your favourite sip." : "Find your Elnaj favourite."} description={isBar ? "Refreshing coolers, signature cocktails and something to complement every dish." : "From the first small bite to the last sweet spoonful. Explore our kitchen, your way."} image={isBar ? "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=1600&q=85" : "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&q=85"} imageAlt={isBar ? "Colourful cocktails garnished with citrus" : "Freshly grilled food with colourful accompaniments"} />
+      <div className="dining-container dining-catalog">
+      <div className="dining-section-heading"><div><p className="dining-eyebrow">{isBar ? "The Elnaj bar" : "Fresh from our kitchen"}</p><h2>{title}</h2></div><Link href={isBar ? "/food" : "/drinks"} className="dining-text-link">{isBar ? "Find a dish to match" : "Add something to sip"} <span aria-hidden="true">↗</span></Link></div>
+      <nav className="catalog-collections" aria-label="Menu collections"><Link href={basePath} aria-current={!category ? "page" : undefined}>All {isBar ? "drinks" : "dishes"}</Link>{categories.map((item) => <Link key={item.id} href={`${basePath}?category=${item.slug}`} aria-current={category === item.slug ? "page" : undefined}>{item.name}</Link>)}</nav>
       <MenuFilters categories={categories} current={{ q, category, tag, sort, minPrice, maxPrice, inStock, minRating }} basePath={scope === "drinks" ? "/drinks" : scope === "food" ? "/food" : "/menu"} />
       <p className="text-sm text-stone-500 mt-4">{filtered.length} item{filtered.length === 1 ? "" : "s"}</p>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
@@ -65,8 +74,11 @@ export default async function Catalog({ searchParams, scope, title }: {
         ))}
       </div>
       {filtered.length === 0 && (
-        <p className="text-stone-500 py-16 text-center">No items match your filters.</p>
+        <div className="catalog-empty"><h3>A different flavour awaits.</h3><p>No items match these filters. Try another category or start fresh.</p><Link href={basePath} className="dining-text-link">Reset filters <span aria-hidden="true">↗</span></Link></div>
       )}
+      <div className="catalog-note"><p className="dining-eyebrow">A note before you order</p><p>Ingredients, allergens and dietary labels are listed on each dish. If you have an allergy, contact us before ordering. Product photography is illustrative; presentation may vary.</p><Link href="/support" className="dining-text-link">Ask our team <span aria-hidden="true">↗</span></Link></div>
+      </div>
+      <DiningInvitation />
     </div>
   );
 }

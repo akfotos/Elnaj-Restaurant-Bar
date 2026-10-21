@@ -9,13 +9,13 @@ export default async function Header() {
   const user = await getSessionUser();
   const announcement = await getSetting("announcement");
   return (
-    <header className="sticky top-3 z-40 px-3 sm:px-4">
+    <header id="top" className="sticky top-3 z-40 px-3 sm:px-4">
       {announcement && (
         <div className="bg-brand-600 text-ink-900 text-center text-xs font-semibold py-1.5 px-4 rounded-b-2xl -mt-3 mb-1.5">
           {announcement}
         </div>
       )}
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="bg-[#1c1917] text-[#fafaf9] rounded-full flex items-center gap-2 pl-3 pr-2 py-2 shadow-lg shadow-black/10 border border-white/5">
           <MobileMenu signedIn={!!user} isAdmin={!!user && user.role !== "CUSTOMER"} name={user?.name.split(" ")[0]} />
           <Link href="/" className="flex items-center gap-2.5 shrink-0">
@@ -25,7 +25,7 @@ export default async function Header() {
               </svg>
             </span>
             <span className="font-bold tracking-tight text-base md:text-lg whitespace-nowrap">
-              <span className="text-brand-500">Elnaj</span> Restaurant &amp; Bar
+              <span className="text-[#dca5b1]">Elnaj</span><span className="hidden min-[420px]:inline"> Restaurant &amp; Bar</span>
             </span>
           </Link>
 

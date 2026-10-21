@@ -53,7 +53,7 @@ export default async function Home() {
         <Reveal><p className="dining-eyebrow">A taste of something special</p></Reveal>
         <Reveal><h2>Rooted in flavour.<br /><em>Made to be enjoyed.</em></h2></Reveal>
         <Reveal><p className="dining-copy">The warmth of local favourites. The sizzle of the grill. That first sip of something refreshing. At Elnaj, we bring together bold dishes and little moments worth slowing down for.</p></Reveal>
-        <Reveal><Link href="/menu" className="dining-text-link">Find your favourite <span aria-hidden="true">↗</span></Link></Reveal>
+        <Reveal><Link href="/about" className="dining-text-link">Discover the Elnaj story <span aria-hidden="true">↗</span></Link></Reveal>
       </section>
 
       <section className="dining-signatures">

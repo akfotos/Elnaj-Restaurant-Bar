@@ -5,19 +5,18 @@ import { usePathname } from "next/navigation";
 
 const LINKS = [
   ["Home", "/"],
-  ["Food", "/food"],
+  ["About", "/about"],
+  ["Menu", "/menu"],
   ["Drinks", "/drinks"],
-  ["Track", "/track"],
-  ["Support", "/support"],
-  ["FAQ", "/faq"],
+  ["Contact", "/support"],
 ];
 
 export default function HeaderNav() {
   const pathname = usePathname();
   return (
-    <nav className="hidden md:flex items-center mx-auto bg-white/10 rounded-full px-1.5 py-1">
+    <nav className="hidden xl:flex items-center mx-auto bg-white/10 rounded-full px-1.5 py-1">
       {LINKS.map(([label, href]) => {
-        const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+        const active = href === "/" ? pathname === "/" : pathname.startsWith(href) || (href === "/menu" && pathname.startsWith("/food"));
         return (
           <Link
             key={href}

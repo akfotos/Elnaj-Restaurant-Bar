@@ -5,12 +5,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const LINKS = [
+  ["Home", "/"],
+  ["About Elnaj", "/about"],
+  ["Full menu", "/menu"],
   ["Food", "/food"],
   ["Drinks", "/drinks"],
   ["Vegan", "/menu?tag=vegan"],
   ["Track Order", "/track"],
-  ["Support", "/support"],
+  ["Contact & enquiries", "/support"],
   ["FAQ", "/faq"],
+  ["Guest guide & policies", "/policies"],
 ];
 
 export default function MobileMenu({ signedIn, isAdmin, name }: { signedIn: boolean; isAdmin: boolean; name?: string }) {
@@ -18,10 +22,12 @@ export default function MobileMenu({ signedIn, isAdmin, name }: { signedIn: bool
   const pathname = usePathname();
 
   return (
-    <div className="md:hidden">
+    <div className="xl:hidden">
       <button
         onClick={() => setOpen(!open)}
-        aria-label="Menu"
+        aria-label={open ? "Close menu" : "Open menu"}
+        aria-expanded={open}
+        aria-controls="storefront-navigation"
         className="p-2 -ml-1 text-white"
       >
         {open ? (
@@ -32,7 +38,7 @@ export default function MobileMenu({ signedIn, isAdmin, name }: { signedIn: bool
       </button>
       {open && (
         <div className="animate-slide-down absolute left-0 right-0 top-full mt-1 mx-3 bg-ink-800 border border-black/10 rounded-2xl shadow-lg overflow-hidden">
-          <nav className="flex flex-col px-4 py-3 text-sm text-stone-800">
+          <nav id="storefront-navigation" aria-label="Main navigation" className="flex flex-col px-4 py-3 text-sm text-stone-800 max-h-[75svh] overflow-y-auto">
             {LINKS.map(([label, href]) => (
               <Link
                 key={href}

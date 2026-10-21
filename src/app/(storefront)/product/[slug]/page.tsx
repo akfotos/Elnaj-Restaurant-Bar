@@ -1,4 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
+import ProductCard from "@/components/ProductCard";
+import DiningInvitation from "@/components/DiningInvitation";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { money } from "@/lib/format";
@@ -30,7 +33,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
+    <div className="dining-editorial">
+      <div className="dining-container dining-product-detail">
+      <nav aria-label="Breadcrumb" className="product-breadcrumb"><Link href="/menu">Our menu</Link><span aria-hidden="true">/</span><Link href={product.category.slug === "drinks" ? "/drinks" : `/food?category=${product.category.slug}`}>{product.category.name}</Link></nav>
       <div className="grid md:grid-cols-2 gap-10">
         <div className="animate-fade-in relative aspect-square bg-ink-800 rounded-2xl overflow-hidden border border-black/10">
           {product.image ? (
@@ -133,14 +138,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <h2 className="text-xl font-bold mb-4">You may also like</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {related.map((p) => (
-              <a key={p.id} href={`/product/${p.slug}`} className="bg-ink-800 border border-black/10 rounded-xl p-4 hover:border-brand-500">
-                <p className="font-medium">{p.name}</p>
-                <p className="text-brand-500 font-semibold mt-1">{money(p.price)}</p>
-              </a>
+              <ProductCard key={p.id} product={p} />
             ))}
           </div>
         </section>
       )}
+      </div>
+      <DiningInvitation />
     </div>
   );
 }

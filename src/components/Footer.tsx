@@ -1,37 +1,18 @@
 import Link from "next/link";
+import { getSetting } from "@/lib/settings";
 
-export default function Footer() {
+export default async function Footer() {
+  const address = await getSetting("pickupAddress");
   return (
-    <footer className="border-t border-black/10 bg-ink-800 mt-16">
-      <div className="max-w-6xl mx-auto px-4 py-10 grid md:grid-cols-4 gap-8 text-sm text-stone-500">
-        <div>
-          <p className="text-lg font-bold text-stone-900"><span className="text-brand-500">Elnaj</span> Restaurant &amp; Bar</p>
-          <p className="mt-2">Fresh dishes, grills and drinks delivered to your door or ready for pickup.</p>
-        </div>
-        <div>
-          <p className="font-semibold text-stone-800 mb-2">Order</p>
-          <ul className="space-y-1">
-            <li><Link href="/menu" className="hover:text-brand-500">Menu</Link></li>
-            <li><Link href="/track" className="hover:text-brand-500">Track order</Link></li>
-            <li><Link href="/cart" className="hover:text-brand-500">Cart</Link></li>
-          </ul>
-        </div>
-        <div>
-          <p className="font-semibold text-stone-800 mb-2">Help</p>
-          <ul className="space-y-1">
-            <li><Link href="/support" className="hover:text-brand-500">Contact us</Link></li>
-            <li><Link href="/faq" className="hover:text-brand-500">FAQ &amp; delivery info</Link></li>
-          </ul>
-        </div>
-        <div>
-          <p className="font-semibold text-stone-800 mb-2">Legal</p>
-          <ul className="space-y-1">
-            <li><Link href="/privacy" className="hover:text-brand-500">Privacy &amp; cookies</Link></li>
-            <li><Link href="/terms" className="hover:text-brand-500">Terms</Link></li>
-          </ul>
-        </div>
+    <footer className="elnaj-footer">
+      <div className="dining-container footer-top"><div><p className="dining-eyebrow">Good food. Great company.</p><Link href="/" className="footer-wordmark">Elnaj<span>Restaurant &amp; Bar</span></Link><p>Local favourites, bold grills and something worth sipping. Enjoy a little Elnaj, your way.</p></div><Link href="/menu" className="dining-button dining-button-outline">Discover the menu <span aria-hidden="true">↗</span></Link></div>
+      <div className="dining-container footer-grid">
+        <div><h2>Explore</h2><ul><li><Link href="/about">About Elnaj</Link></li><li><Link href="/food">Food menu</Link></li><li><Link href="/drinks">Drinks &amp; bar</Link></li><li><Link href="/food?category=desserts">Something sweet</Link></li></ul></div>
+        <div><h2>Your order</h2><ul><li><Link href="/cart">Your basket</Link></li><li><Link href="/track">Track an order</Link></li><li><Link href="/account">Your account</Link></li><li><Link href="/faq">Delivery &amp; pickup</Link></li></ul></div>
+        <div><h2>Let’s talk</h2><ul><li><Link href="/support">Contact &amp; enquiries</Link></li><li><Link href="/policies">Guest guide &amp; policies</Link></li></ul>{address && <div className="footer-address"><h2>Pickup address</h2><p>{address}</p></div>}</div>
+        <div><h2>A little guidance</h2><p>Have a dietary question or a special request? Contact our team before ordering.</p><Link href="/support" className="footer-contact-link">Start a conversation <span aria-hidden="true">↗</span></Link></div>
       </div>
-      <p className="text-center text-xs text-stone-500 pb-6">© {new Date().getFullYear()} Elnaj Restaurant &amp; Bar</p>
+      <div className="dining-container footer-bottom"><p>© {new Date().getFullYear()} Elnaj Restaurant &amp; Bar</p><div><Link href="/privacy">Privacy &amp; cookies</Link><Link href="/terms">Terms of service</Link><a href="#top">Back to top ↑</a></div></div>
     </footer>
   );
 }
