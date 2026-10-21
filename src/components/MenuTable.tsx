@@ -17,14 +17,14 @@ export default function MenuTable({ products, categories }: {
           <section key={category.id} className="menu-table-section">
             <h3>{category.name}</h3>
             <div className="menu-table-scroll" role="region" aria-label={`${category.name} menu`} tabIndex={0}>
-              <table className="menu-table">
+              <table className="menu-table" role="table">
                 <caption className="sr-only">{category.name} — dishes, contents and prices in Ghana cedis</caption>
-                <thead><tr><th scope="col">Dish</th><th scope="col">Description &amp; contents</th><th scope="col">Price (GHS)</th></tr></thead>
-                <tbody>{dishes.map((product) => (
-                  <tr key={product.id}>
-                    <th scope="row"><Link href={`/product/${product.slug}`}>{product.name} <span aria-hidden="true">↗</span></Link>{product.trackStock && product.stock <= 0 && <span className="menu-stock-note">Currently unavailable</span>}</th>
-                    <td><p>{product.description}</p>{product.ingredients && <p className="menu-table-detail"><strong>Ingredients:</strong> {product.ingredients}</p>}{product.allergens && <p className="menu-table-detail"><strong>Allergen information:</strong> {product.allergens}</p>}{product.dietaryLabels && <p className="menu-table-labels">{product.dietaryLabels.split(",").filter(Boolean).join(" · ")}</p>}</td>
-                    <td className="menu-table-price"><span>{money(product.price)}</span><small>{product.unitLabel}</small>{product.variants.map((variant) => <small key={variant.id}>{variant.name}: {money(variant.price)}</small>)}</td>
+                <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Dish</th><th scope="col" role="columnheader">Description &amp; contents</th><th scope="col" role="columnheader">Price (GHS)</th></tr></thead>
+                <tbody role="rowgroup">{dishes.map((product) => (
+                  <tr key={product.id} role="row">
+                    <th scope="row" role="rowheader"><Link href={`/product/${product.slug}`}>{product.name} <span aria-hidden="true">↗</span></Link>{product.trackStock && product.stock <= 0 && <span className="menu-stock-note">Currently unavailable</span>}</th>
+                    <td role="cell"><p>{product.description}</p>{product.ingredients && <p className="menu-table-detail"><strong>Ingredients:</strong> {product.ingredients}</p>}{product.allergens && <p className="menu-table-detail"><strong>Allergen information:</strong> {product.allergens}</p>}{product.dietaryLabels && <p className="menu-table-labels">{product.dietaryLabels.split(",").filter(Boolean).join(" · ")}</p>}</td>
+                    <td className="menu-table-price" role="cell"><span>{money(product.price)}</span><small>{product.unitLabel}</small>{product.variants.map((variant) => <small key={variant.id}>{variant.name}: {money(variant.price)}</small>)}</td>
                   </tr>
                 ))}</tbody>
               </table>
