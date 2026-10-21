@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+@theme {
+  /* Burgundy accent */
+  --color-brand-50: #fdf3f5;
+  --color-brand-100: #f7e0e6;
+  --color-brand-500: #800020;
+  --color-brand-600: #6b001b;
+  --color-brand-700: #550016;
+  /* Surfaces (light) — ink-900 = page bg, ink-800 = card, ink-700 = subtle fill */
+  --color-ink-900: #faf9f7;
+  --color-ink-800: #ffffff;
+  --color-ink-700: #f3f1ee;
+  --font-display: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Dark mode: remap the palette tokens — components adapt automatically */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-ink-900: #161210;
+    --color-ink-800: #1f1a17;
+    --color-ink-700: #2b2521;
+
+    /* Lighter burgundy so brand buttons keep dark-text contrast */
+    --color-brand-50: #2a1016;
+    --color-brand-100: #401622;
+    --color-brand-500: #b5304f;
+    --color-brand-600: #c9486a;
+    --color-brand-700: #d4657f;
+
+    /* Stone scale flips: dark text tokens become light, light surfaces become dark */
+    --color-stone-50: #1c1917;
+    --color-stone-100: #292524;
+    --color-stone-200: #44403c;
+    --color-stone-300: #57534e;
+    --color-stone-400: #a8a29e;
+    --color-stone-500: #a8a29e;
+    --color-stone-600: #d6d3d1;
+    --color-stone-700: #e7e5e4;
+    --color-stone-800: #f5f5f4;
+    --color-stone-900: #fafaf9;
+
+    /* border-black/x utilities become light borders on dark surfaces */
+    --color-black: #f5f4f2;
+
+    /* Feedback colors tuned for dark surfaces */
+    --color-emerald-50: #052e22;
+    --color-emerald-200: #134e3a;
+    --color-emerald-600: #34d399;
+    --color-emerald-700: #6ee7b7;
+    --color-red-50: #3b0a0a;
+    --color-red-200: #7f1d1d;
+    --color-red-600: #f87171;
+    --color-amber-700: #fbbf24;
+  }
+}
+
+/* The admin workspace is always dark regardless of device theme, so the same
+   dark-mode token overrides are applied under an .admin-dark scope. */
+.admin-dark {
+  --color-ink-900: #161210;
+  --color-ink-800: #1f1a17;
+  --color-ink-700: #2b2521;
+  --color-brand-50: #2a1016;
+  --color-brand-100: #401622;
+  --color-brand-500: #b5304f;
+  --color-brand-600: #c9486a;
+  --color-brand-700: #d4657f;
+  --color-stone-50: #1c1917;
+  --color-stone-100: #292524;
+  --color-stone-200: #44403c;
+  --color-stone-300: #57534e;
+  --color-stone-400: #a8a29e;
+  --color-stone-500: #a8a29e;
+  --color-stone-600: #d6d3d1;
+  --color-stone-700: #e7e5e4;
+  --color-stone-800: #f5f5f4;
+  --color-stone-900: #fafaf9;
+  --color-black: #f5f4f2;
+  --color-emerald-50: #052e22;
+  --color-emerald-200: #134e3a;
+  --color-emerald-600: #34d399;
+  --color-emerald-700: #6ee7b7;
+  --color-red-50: #3b0a0a;
+  --color-red-200: #7f1d1d;
+  --color-red-600: #f87171;
+  --color-amber-700: #fbbf24;
+}
+
+body {
+  @apply bg-ink-900 text-stone-800 antialiased;
+}
+
+input, select, textarea {
+  @apply outline-none;
+}
+
+/* ---------- Animations ---------- */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cart-bump {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.animate-fade-up { animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-fade-in { animation: fade-in 0.5s ease both; }
+.animate-pop { animation: pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-slide-down { animation: slide-down 0.25s ease both; }
+.animate-cart-bump { animation: cart-bump 0.3s ease; }
+
+/* Scroll reveal — element fades/slides in when it enters the viewport */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card & interactive polish */
+.card-lift {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px -12px rgb(0 0 0 / 0.18);
+  border-color: var(--color-brand-500);
+}
+.img-zoom { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.group:hover .img-zoom, .card-lift:hover .img-zoom { transform: scale(1.08) rotate(0.5deg); }
+
+/* Image hover overlay: burgundy wash + "View dish" pill slides up */
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(128 0 32 / 0.45), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.card-lift:hover .img-overlay { opacity: 1; }
+.img-cta {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-lift:hover .img-cta { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.btn-press { transition: transform 0.12s ease, background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease; }
+.btn-press:active { transform: scale(0.96); }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up, .animate-fade-in, .animate-pop, .animate-slide-down, .animate-cart-bump {
+    animation: none;
+  }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .card-lift, .img-zoom, .btn-press { transition: none; }
+}

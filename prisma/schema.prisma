@@ -1,0 +1,248 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  STAFF
+  MANAGER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  READY
+  OUT_FOR_DELIVERY
+  DELIVERED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum FulfillmentType {
+  DELIVERY
+  PICKUP
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         Role       @default(CUSTOMER)
+  createdAt    DateTime   @default(now())
+  addresses    Address[]
+  orders       Order[]
+  reviews      Review[]
+  wishlist     WishlistItem[]
+  supportNotes String?
+}
+
+model Address {
+  id         String  @id @default(cuid())
+  userId     String
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label      String  @default("Home")
+  line1      String
+  line2      String?
+  city       String
+  postalCode String
+  isDefault  Boolean @default(false)
+  orders     Order[]
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  image       String?
+  sortOrder   Int       @default(0)
+  products    Product[]
+}
+
+model Product {
+  id             String           @id @default(cuid())
+  name           String
+  slug           String           @unique
+  description    String
+  image          String?
+  categoryId     String
+  category       Category         @relation(fields: [categoryId], references: [id])
+  price          Float // base price in store currency
+  compareAtPrice Float?
+  stock          Int              @default(0)
+  trackStock     Boolean          @default(true)
+  isActive       Boolean          @default(true)
+  isFeatured     Boolean          @default(false)
+  isBestseller   Boolean          @default(false)
+  isSeasonal     Boolean          @default(false)
+  // food-specific
+  ingredients    String?
+  allergens      String? // comma-separated
+  dietaryLabels  String? // comma-separated: vegan,vegetarian,halal,gluten-free
+  nutrition      String? // JSON: calories, protein, carbs, fat
+  storageNotes   String?
+  extras         String? // JSON [{name, price}] selectable add-ons
+  weightBased    Boolean          @default(false)
+  unitLabel      String           @default("each") // each, per kg, per lb
+  spicyLevel     Int              @default(0) // 0-3
+  prepTimeMins   Int              @default(20)
+  createdAt      DateTime         @default(now())
+  variants       ProductVariant[]
+  orderItems     OrderItem[]
+  reviews        Review[]
+  wishlist       WishlistItem[]
+}
+
+model ProductVariant {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String // e.g. "Large", "500g"
+  price     Float
+  stock     Int     @default(0)
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+}
+
+model WishlistItem {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model Coupon {
+  id             String   @id @default(cuid())
+  code           String   @unique
+  description    String?
+  percentOff     Float?
+  amountOff      Float? // fixed currency amount
+  minOrder       Float    @default(0)
+  maxUses        Int?
+  usedCount      Int      @default(0)
+  expiresAt      DateTime?
+  isActive       Boolean  @default(true)
+  freeDelivery   Boolean  @default(false)
+  orders         Order[]
+}
+
+model DeliveryZone {
+  id          String  @id @default(cuid())
+  name        String
+  postalCodes String // comma-separated prefixes/codes
+  fee         Float   @default(0)
+  minOrder    Float   @default(0)
+  etaMinutes  Int     @default(45)
+  isActive    Boolean @default(true)
+  orders      Order[]
+}
+
+model Order {
+  id              String           @id @default(cuid())
+  orderNumber     String           @unique
+  userId          String?
+  user            User?            @relation(fields: [userId], references: [id])
+  guestEmail      String?
+  guestName       String?
+  guestPhone      String?
+  status          OrderStatus      @default(PENDING)
+  fulfillment     FulfillmentType
+  addressId       String?
+  address         Address?         @relation(fields: [addressId], references: [id])
+  addressSnapshot String? // JSON of address at order time
+  deliveryZoneId  String?
+  deliveryZone    DeliveryZone?    @relation(fields: [deliveryZoneId], references: [id])
+  timeSlot        String? // e.g. "18:00-18:30" or "ASAP"
+  notes           String?
+  subtotal        Float
+  deliveryFee     Float            @default(0)
+  discount        Float            @default(0)
+  tax             Float            @default(0)
+  total           Float
+  couponId        String?
+  coupon          Coupon?          @relation(fields: [couponId], references: [id])
+  paymentMethod   String // cod, card, apple_pay, google_pay, paypal
+  paymentStatus   PaymentStatus    @default(UNPAID)
+  items           OrderItem[]
+  statusHistory   StatusHistory[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  orderId      String
+  order        Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product @relation(fields: [productId], references: [id])
+  variantName  String?
+  extras       String? // JSON [{name, price}] snapshot of chosen add-ons
+  nameSnapshot String
+  unitPrice    Float
+  quantity     Float // Float to support weight-based
+  total        Float
+}
+
+model StatusHistory {
+  id        String      @id @default(cuid())
+  orderId   String
+  order     Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status    OrderStatus
+  note      String?
+  createdAt DateTime    @default(now())
+}
+
+model SupportMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  resolved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actorName String?
+  action    String
+  entity    String
+  entityId  String?
+  detail    String?
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value String
+}
