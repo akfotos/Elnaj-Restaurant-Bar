@@ -67,7 +67,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
           )}
           <p className="mt-5 text-stone-600 leading-relaxed">{product.description}</p>
-          <p className="mt-2 text-sm text-stone-500">Prep time: ~{product.prepTimeMins} min</p>
+          <p className="mt-3 text-sm text-stone-500">Estimated preparation: about {product.prepTimeMins} minutes.</p>
+          <p className="mt-6 text-sm text-stone-500 leading-relaxed">Choose your quantity and any available options before adding this dish to your basket.</p>
           <ProductPurchase product={product} />
 
           <div className="mt-8 space-y-4 text-sm">
@@ -103,11 +104,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               </section>
             )}
           </div>
+          <p className="page-note">Ingredient and dietary information describes the recipe, not a guarantee against cross-contact. For an allergy or a requirement that needs confirmation, <Link href="/support">ask our team</Link> before ordering.</p>
         </div>
       </div>
 
       <section className="mt-16">
-        <h2 className="text-xl font-bold mb-4">Reviews</h2>
+        <h2 className="text-xl font-bold mb-4">Guest feedback</h2>
+        <p className="account-section-copy">Feedback shared by signed-in guests. Read their comments, or sign in to share your own experience with this dish.</p>
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-4">
             {product.reviews.length === 0 && <p className="text-stone-500 text-sm">No reviews yet.</p>}
@@ -122,7 +125,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             ))}
           </div>
           {user ? <ReviewForm productId={product.id} /> : (
-            <p className="text-sm text-stone-500">Sign in to leave a review.</p>
+            <p className="text-sm text-stone-500"><Link href="/login" className="underline">Sign in</Link> to leave a review.</p>
           )}
         </div>
       </section>

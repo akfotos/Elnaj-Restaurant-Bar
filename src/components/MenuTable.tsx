@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Reveal from "@/components/Reveal";
 import { money } from "@/lib/format";
 import type { Product, ProductVariant } from "@prisma/client";
 
@@ -14,8 +15,8 @@ export default function MenuTable({ products, categories }: {
         const dishes = products.filter((product) => product.categoryId === category.id);
         if (!dishes.length) return null;
         return (
-          <section key={category.id} className="menu-table-section">
-            <h3>{category.name}</h3>
+          <Reveal as="section" key={category.id} className="menu-table-section">
+            <h2>{category.name}</h2>
             <div className="menu-table-scroll" role="region" aria-label={`${category.name} menu`} tabIndex={0}>
               <table className="menu-table" role="table">
                 <caption className="sr-only">{category.name} — dishes, contents and prices in Ghana cedis</caption>
@@ -29,7 +30,7 @@ export default function MenuTable({ products, categories }: {
                 ))}</tbody>
               </table>
             </div>
-          </section>
+          </Reveal>
         );
       })}
     </div>

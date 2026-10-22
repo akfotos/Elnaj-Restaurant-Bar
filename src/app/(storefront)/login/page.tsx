@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import PageIntro from "@/components/PageIntro";
 
 function OAuthError({ setError }: { setError: (e: string) => void }) {
   const sp = useSearchParams();
@@ -42,24 +43,18 @@ export default function LoginPage() {
     "w-full bg-ink-800 border border-black/10 rounded-xl px-4 py-3 text-sm placeholder:text-stone-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition";
 
   return (
-    <div className="min-h-[calc(100vh-120px)] grid lg:grid-cols-2 bg-ink-900">
+    <div className="storefront-login min-h-[calc(100vh-120px)] grid lg:grid-cols-2 bg-ink-900">
       {/* Brand panel */}
-      <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-[#800020] to-[#4a0012] p-12 relative overflow-hidden">
-        <div className="absolute -top-32 -right-32 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 -left-24 w-72 h-72 bg-black/10 rounded-full blur-3xl" />
+      <div className="hidden lg:flex flex-col justify-between bg-[#800020] p-12 xl:p-16 relative overflow-hidden">
         <Link href="/" className="text-2xl font-bold text-white relative">
           Elnaj Restaurant &amp; Bar
         </Link>
         <div className="relative">
-          <h2 className="text-4xl font-bold text-white leading-tight">Good food is<br />just a sign-in away.</h2>
-          <p className="mt-4 text-white/70 max-w-sm">
-            Track orders in real time, save your favorite dishes, and checkout in seconds.
+          <h2 className="text-4xl text-white leading-tight">Your Elnaj favourites.<br />One familiar place.</h2>
+          <p className="mt-6 text-white/70 max-w-sm leading-relaxed">
+            Revisit your orders, keep delivery details handy and save dishes for another day.
           </p>
-          <div className="mt-8 flex gap-6 text-sm text-white/70">
-            <span>🛵 Fast delivery</span>
-            <span>🔒 Secure checkout</span>
-            <span>⭐ Member rewards</span>
-          </div>
+          <p className="mt-10 text-xs text-white/60 tracking-wide">Order history · Saved addresses · Favourites</p>
         </div>
         <p className="text-xs text-white/50 relative">© Elnaj Restaurant &amp; Bar</p>
       </div>
@@ -70,8 +65,7 @@ export default function LoginPage() {
           <Suspense>
             <OAuthError setError={setError} />
           </Suspense>
-          <h1 className="text-2xl font-bold">Welcome back</h1>
-          <p className="text-sm text-stone-500 mt-1 mb-8">Sign in to your account to continue</p>
+          <PageIntro eyebrow="Your Elnaj account" title="Welcome back." description="Sign in to find your order history, saved addresses and favourite dishes. You can also place an order as a guest." className="page-intro-compact" />
 
           <div className="space-y-3">
             <a
@@ -113,12 +107,12 @@ export default function LoginPage() {
             }}
           >
             <div>
-              <label className="block text-sm font-medium text-stone-600 mb-1.5">Email</label>
-              <input type="email" required placeholder="you@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={input} />
+              <label htmlFor="login-email" className="block text-sm font-medium text-stone-600 mb-1.5">Email address</label>
+              <input id="login-email" autoComplete="email" type="email" required placeholder="you@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={input} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-600 mb-1.5">Password</label>
-              <input type="password" required placeholder="••••••••" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className={input} />
+              <label htmlFor="login-password" className="block text-sm font-medium text-stone-600 mb-1.5">Password</label>
+              <input id="login-password" autoComplete="current-password" type="password" required placeholder="••••••••" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className={input} />
             </div>
             {error && <p className="text-sm text-red-500 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>}
             <button disabled={loading} className="w-full bg-brand-500 disabled:opacity-60 text-ink-900 font-bold rounded-xl py-3 hover:bg-brand-600 transition">

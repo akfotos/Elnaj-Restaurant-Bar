@@ -1,3 +1,5 @@
+import PageIntro from "@/components/PageIntro";
+
 export const metadata = { title: "Terms of Service" };
 
 const Section = ({ n, title, children }: { n: string; title: string; children: React.ReactNode }) => (
@@ -9,11 +11,11 @@ const Section = ({ n, title, children }: { n: string; title: string; children: R
 
 export default function TermsPage() {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold mb-2">Terms of Service</h1>
+    <div className="storefront-page storefront-reading">
+      <PageIntro eyebrow="Ordering with Elnaj" title="Terms of service." description="The conditions that apply when you use this website or place an order, including pricing, payment, delivery, pickup and refund requests." className="page-intro-compact" />
       <p className="text-sm text-stone-500 mb-10">Last updated: October 2025 · Elnaj Restaurant &amp; Bar</p>
 
-      <div className="space-y-8 text-sm text-stone-600 leading-relaxed">
+      <div className="space-y-10 text-sm text-stone-600 leading-relaxed">
         <Section n="1" title="Agreement">
           <p>
             These Terms of Service ("Terms") govern your use of the Elnaj Restaurant &amp; Bar website and

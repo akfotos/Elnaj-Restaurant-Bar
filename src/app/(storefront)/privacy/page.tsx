@@ -1,3 +1,5 @@
+import PageIntro from "@/components/PageIntro";
+
 export const metadata = { title: "Privacy & Cookies Policy" };
 
 const Section = ({ n, title, children }: { n: string; title: string; children: React.ReactNode }) => (
@@ -9,11 +11,11 @@ const Section = ({ n, title, children }: { n: string; title: string; children: R
 
 export default function PrivacyPage() {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold mb-2">Privacy &amp; Cookies Policy</h1>
+    <div className="storefront-page storefront-reading">
+      <PageIntro eyebrow="Your information" title="Privacy & cookies." description="How Elnaj handles information from accounts, orders, table requests and messages, and how to raise a question about your personal data." className="page-intro-compact" />
       <p className="text-sm text-stone-500 mb-10">Last updated: October 2025 · Elnaj Restaurant &amp; Bar ("Elnaj", "we", "us", "our")</p>
 
-      <div className="space-y-8 text-sm text-stone-600 leading-relaxed">
+      <div className="space-y-10 text-sm text-stone-600 leading-relaxed">
         <Section n="1" title="Who we are">
           <p>
             Elnaj Restaurant &amp; Bar operates this website and online ordering service from Accra, Ghana.

@@ -1,29 +1,27 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { createElement, useEffect, useRef, type ReactNode } from "react";
 
-export default function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
+export default function Reveal({ children, delay = 0, className = "", as = "div" }: { children: ReactNode; delay?: number; className?: string; as?: "div" | "header" | "section" }) {
+  const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add("visible");
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+    const element = ref.current;
+    if (!element) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      element.classList.add("visible");
+      return;
+    }
+    element.classList.add("reveal-ready");
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        element.classList.add("visible");
+        observer.disconnect();
+      }
+    }, { threshold: 0, rootMargin: "0px 0px -24px 0px" });
+    observer.observe(element);
+    return () => observer.disconnect();
   }, []);
 
-  return (
-    <div ref={ref} className={`reveal ${className}`} style={{ "--reveal-delay": `${delay}ms` } as React.CSSProperties}>
-      {children}
-    </div>
-  );
+  return createElement(as, { ref, className: `reveal ${className}`, style: { "--reveal-delay": `${delay}ms` } as React.CSSProperties }, children);
 }

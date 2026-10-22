@@ -9,7 +9,7 @@ export default async function Header() {
   const user = await getSessionUser();
   const announcement = await getSetting("announcement");
   return (
-    <header id="top" className="sticky top-3 z-40 px-3 sm:px-4">
+    <header id="top" tabIndex={-1} className="sticky top-3 z-40 px-3 sm:px-4">
       {announcement && (
         <div className="text-stone-500 text-center text-[11px] py-2 px-4 -mt-3 mb-2">
           {announcement}

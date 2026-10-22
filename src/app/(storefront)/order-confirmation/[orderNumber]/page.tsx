@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { money } from "@/lib/format";
+import PageIntro from "@/components/PageIntro";
+import { getOrderContent } from "@/lib/order-content";
 
 export const dynamic = "force-dynamic";
 
@@ -9,16 +11,15 @@ export default async function ConfirmationPage({ params }: { params: Promise<{ o
   const { orderNumber } = await params;
   const order = await db.order.findUnique({ where: { orderNumber }, include: { items: true } });
   if (!order) notFound();
+  const copy = getOrderContent(order.status, order.fulfillment);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-      <p className="animate-pop text-5xl mb-4">✅</p>
-      <h1 className="animate-fade-up text-3xl font-bold">Order confirmed!</h1>
-      <p className="text-stone-500 mt-2">Order <span className="text-brand-500 font-mono font-semibold">{order.orderNumber}</span></p>
-      <p className="text-stone-500 mt-1">
-        {order.fulfillment === "DELIVERY" ? "We're preparing your delivery" : "Ready for pickup"} — {order.timeSlot}
-      </p>
-      <div className="bg-ink-800 border border-black/10 rounded-xl p-5 mt-8 text-left">
+    <div className="storefront-page storefront-narrow text-center">
+      <PageIntro eyebrow="Your Elnaj order" title={copy.title} description={copy.description} className="page-intro-centered" />
+      <p className="text-stone-500">Reference <span className="text-brand-500 font-mono font-semibold">{order.orderNumber}</span></p>
+      <p className="text-sm text-stone-500 mt-3">{order.fulfillment === "DELIVERY" ? "Delivery" : "Pickup"}{order.timeSlot ? ` · Requested time: ${order.timeSlot}` : ""}</p>
+      <div className="bg-ink-800 border border-black/10 rounded-xl p-6 sm:p-8 mt-10 text-left">
+        <h2 className="text-lg font-semibold mb-6">Order details</h2>
         {order.items.map((i) => (
           <div key={i.id} className="flex justify-between text-sm py-1.5">
             <span>{i.quantity}× {i.nameSnapshot}</span><span>{money(i.total)}</span>
@@ -33,10 +34,11 @@ export default async function ConfirmationPage({ params }: { params: Promise<{ o
           <p className="text-xs text-stone-500 pt-1">Payment: {order.paymentMethod.toUpperCase()} · {order.paymentStatus}</p>
         </div>
       </div>
-      <div className="mt-8 flex justify-center gap-4">
+      <div className="mt-10 flex flex-wrap justify-center gap-4">
         <Link href={`/track?order=${order.orderNumber}`} className="bg-brand-500 text-ink-900 font-bold rounded-full px-6 py-3">Track order</Link>
         <Link href="/menu" className="border border-black/20 rounded-full px-6 py-3">Back to menu</Link>
       </div>
+      <p className="page-note">Have a question about this order? <Link href="/support">Contact the team</Link> and include the reference above. This page shows the recorded payment status; it does not itself process a payment.</p>
     </div>
   );
 }

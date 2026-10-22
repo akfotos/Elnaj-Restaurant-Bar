@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart, lineTotal } from "@/lib/cart";
 import { money } from "@/lib/format";
+import Link from "next/link";
+import PageIntro from "@/components/PageIntro";
 
 type Zone = { id: string; name: string; postalCodes: string; fee: number; minOrder: number; etaMinutes: number };
 type Addr = { id: string; label: string; line1: string; line2?: string | null; city: string; postalCode: string };
@@ -35,7 +37,7 @@ export default function CheckoutPage() {
 
   if (!mounted) return null;
   if (items.length === 0)
-    return <div className="max-w-3xl mx-auto px-4 py-24 text-center text-stone-500">Your cart is empty.</div>;
+    return <div className="storefront-page storefront-narrow"><PageIntro eyebrow="Checkout" title="Choose your meal first." description="Add your favourites to the basket before choosing delivery or pickup. You don’t need an account to place an order." /><Link href="/menu" className="dining-text-link">Explore the menu <span aria-hidden="true">↗</span></Link></div>;
 
   const subtotal = items.reduce((s, i) => s + lineTotal(i), 0);
   const zone = zones.find((z) => z.postalCodes.split(",").map((s) => s.trim()).some((p) => form.postalCode.startsWith(p)));
@@ -71,12 +73,13 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10 grid lg:grid-cols-3 gap-8">
-      <div className="lg:col-span-2 space-y-6">
-        <h1 className="text-2xl font-bold">Checkout</h1>
+    <div className="storefront-page">
+      <PageIntro eyebrow="Delivery or pickup" title="Make it your meal." description="Tell us where and when you’d like your food, add your contact details, and review your order. Our team will check availability after you submit it." />
+      <div className="grid lg:grid-cols-3 gap-10 lg:gap-14">
+      <div className="lg:col-span-2 space-y-8">
 
         <section className="bg-ink-800 border border-black/10 rounded-xl p-5">
-          <h2 className="font-semibold mb-3">Fulfillment</h2>
+          <h2 className="font-semibold mb-3">Delivery or pickup</h2>
           <div className="flex gap-3">
             {settings.deliveryEnabled === "true" && (
               <button onClick={() => setForm({ ...form, fulfillment: "DELIVERY" })} className={`flex-1 rounded-lg border py-3 text-sm font-medium ${form.fulfillment === "DELIVERY" ? "border-brand-500 text-brand-500" : "border-black/15"}`}>
@@ -170,14 +173,17 @@ export default function CheckoutPage() {
           <div className="flex justify-between text-stone-500"><span>Subtotal</span><span>{money(subtotal)}</span></div>
           <div className="flex justify-between text-stone-500"><span>Delivery</span><span>{money(deliveryFee)}</span></div>
           {tax > 0 && <div className="flex justify-between text-stone-500"><span>Tax</span><span>{money(tax)}</span></div>}
-          <div className="flex justify-between font-bold text-lg pt-2"><span>Total</span><span className="text-brand-500">{money(total)}</span></div>
+          <div className="flex justify-between font-bold text-lg pt-2"><span>Estimated total</span><span className="text-brand-500">{money(total)}</span></div>
         </div>
         {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
         <button onClick={submit} disabled={loading} className="w-full mt-5 bg-brand-500 disabled:opacity-50 text-ink-900 font-bold rounded-full py-3 hover:bg-brand-600">
           {loading ? "Placing order…" : "Place order"}
         </button>
-        <p className="text-xs text-stone-500 mt-3">Secure checkout. Online card payments (Stripe/Paystack) can be enabled in Settings → Payments.</p>
+        <p className="text-xs text-stone-500 mt-4 leading-relaxed">No online payment is taken on this page. Your selected payment method is recorded for the restaurant to arrange with you.</p>
+        {couponCode && <p className="text-xs text-stone-500 mt-3 leading-relaxed">Promo code {couponCode} will be checked when the order is submitted. The estimate above does not include a promo discount.</p>}
       </aside>
+      </div>
+      <p className="page-note">Please check your address, phone number and order notes carefully. For an allergy or a request that needs confirmation, <Link href="/support">contact the team</Link> before placing your order.</p>
     </div>
   );
 }

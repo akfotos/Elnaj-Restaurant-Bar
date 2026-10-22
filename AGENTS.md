@@ -7,6 +7,11 @@ Next.js 15 (App Router) + TypeScript + Tailwind v4 + Prisma 6 + SQLite. Zustand 
 
 - Keep food and drink listings, category browsing, prices and menu downloads on `/menu`. Other pages should link there instead of repeating menu previews or recommendations; individual product pages remain for details and purchasing.
 
+- Give each customer page a short, purpose-specific introduction and relevant guidance without adding repeated banners or extra sections. Use `PageIntro` for functional pages and the existing heroes for editorial pages. Keep claims aligned with actual features: no automatic payment, booking confirmation, notifications, rewards or live tracking unless implemented.
+- Order receipt and tracking wording is centralized in `src/lib/order-content.ts`; pending orders must not claim confirmation or readiness, and pickup progress should use collection wording.
+
+- Motion should be subtle: one-time `Reveal` entrances, restrained hover effects, and full `prefers-reduced-motion` support. Reveal content must remain visible without JavaScript. The shared storefront includes `BackToTop`, which appears after 480px of scrolling and returns focus to the `#top` header.
+
 ## Hero media
 - Homepage stock footage: “Chef cooking on a large grill” (Mixkit item 4678), https://mixkit.co/free-stock-video/chef-cooking-on-a-large-grill-4678/ — listed under the Mixkit Stock Video Free License for commercial/personal use: https://mixkit.co/license/#videoFree.
 - The video is served from Mixkit’s CDN via `src/components/HeroVideo.tsx`. Keep a poster fallback, muted inline playback, a pause control, and reduced-motion handling when replacing it with Elnaj footage.

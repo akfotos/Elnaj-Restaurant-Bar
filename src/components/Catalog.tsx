@@ -5,6 +5,7 @@ import MenuFilters from "@/components/MenuFilters";
 import MenuTable from "@/components/MenuTable";
 import MenuDownloadButton from "@/components/MenuDownloadButton";
 import Reveal from "@/components/Reveal";
+import PageIntro from "@/components/PageIntro";
 import type { Prisma } from "@prisma/client";
 
 type SP = Record<string, string | string[] | undefined>;
@@ -49,6 +50,8 @@ export default async function Catalog({ searchParams, title }: {
       })
     : products;
 
+  const selectedCategory = categories.find((item) => item.slug === category);
+  const introduction = selectedCategory?.description || (selectedCategory ? `Explore ${selectedCategory.name.toLowerCase()}, compare current prices and open a dish for its options. Ingredients and dietary information are available below each description.` : "Explore Elnaj’s food and drinks, compare prices and choose a dish to see its options. Switch between the menu table and photo cards, or keep a PDF for later.");
   const basePath = "/menu";
   const view = sp.view === "cards" ? "cards" : "table";
   const viewHref = (nextView: string) => {
@@ -61,7 +64,7 @@ export default async function Catalog({ searchParams, title }: {
   return (
     <div className="dining-editorial">
       <div className="dining-container dining-catalog">
-      <header className="catalog-page-heading"><h1>{title}</h1><p>Food, drinks and something sweet. Everything in one place.</p></header>
+      <PageIntro eyebrow={selectedCategory?.name ?? "The Elnaj kitchen & bar"} title={`${title}.`} description={introduction} />
       <nav className="catalog-collections" aria-label="Menu collections"><Link href={basePath} aria-current={!category ? "page" : undefined}>Full menu</Link>{categories.map((item) => <Link key={item.id} href={`${basePath}?category=${item.slug}`} aria-current={category === item.slug ? "page" : undefined}>{item.name}</Link>)}</nav>
       <MenuFilters categories={categories} current={{ q, category, tag, sort, minPrice, maxPrice, inStock, minRating }} basePath={basePath} />
       <div className="menu-toolbar"><div className="menu-view-switch" role="group" aria-label="Menu display"><Link href={viewHref("table")} aria-current={view === "table" ? "true" : undefined}>Menu table</Link><Link href={viewHref("cards")} aria-current={view === "cards" ? "true" : undefined}>Photo cards</Link></div><MenuDownloadButton /></div>

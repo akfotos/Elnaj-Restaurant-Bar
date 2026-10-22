@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import PageIntro from "@/components/PageIntro";
 import { useCart, lineTotal } from "@/lib/cart";
 import { money } from "@/lib/format";
 import { useState } from "react";
@@ -13,9 +14,8 @@ export default function CartPage() {
 
   if (items.length === 0)
     return (
-      <div className="max-w-3xl mx-auto px-4 py-24 text-center">
-        <p className="text-5xl mb-4">🛒</p>
-        <h1 className="text-2xl font-bold">Your cart is empty</h1>
+      <div className="storefront-page storefront-narrow text-center">
+        <PageIntro eyebrow="Your Elnaj order" title="Your basket is waiting." description="Choose something from the menu, select any options you’d like, and add it to your basket. You can review everything here before checkout." className="page-intro-centered" />
         <Link href="/menu" className="inline-block mt-6 bg-brand-500 text-ink-900 font-bold rounded-full px-6 py-3">
           Browse the menu
         </Link>
@@ -23,12 +23,13 @@ export default function CartPage() {
     );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10 grid lg:grid-cols-3 gap-8">
+    <div className="storefront-page">
+      <PageIntro eyebrow="Your Elnaj order" title="Your basket." description="Check your dishes, options and quantities before moving to checkout. Delivery details and your preferred payment method come next." />
+      <div className="grid lg:grid-cols-3 gap-10 lg:gap-14">
       <div className="lg:col-span-2 space-y-3">
-        <h1 className="text-2xl font-bold mb-4">Cart</h1>
         {items.map((i) => (
-          <div key={`${i.productId}|${i.variantName}|${(i.extras ?? []).map((e) => e.name).join(",")}`} className="flex gap-4 bg-ink-800 border border-black/10 rounded-xl p-4">
-            <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-ink-700 shrink-0">
+          <div key={`${i.productId}|${i.variantName}|${(i.extras ?? []).map((e) => e.name).join(",")}`} className="grid grid-cols-[64px_minmax(0,1fr)] sm:grid-cols-[80px_minmax(0,1fr)_auto] gap-4 border-b border-black/10 py-6">
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 overflow-hidden bg-ink-700">
               {i.image ? <Image src={i.image} alt={i.name} fill className="object-cover" /> : <div className="w-full h-full flex items-center justify-center">🍽️</div>}
             </div>
             <div className="flex-1">
@@ -49,7 +50,7 @@ export default function CartPage() {
                 <button onClick={() => remove(i)} className="text-sm text-red-400 hover:underline">Remove</button>
               </div>
             </div>
-            <p className="font-semibold">{money(lineTotal(i))}</p>
+            <p className="font-semibold col-start-2 sm:col-start-auto">{money(lineTotal(i))}</p>
           </div>
         ))}
       </div>
@@ -60,7 +61,7 @@ export default function CartPage() {
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
             placeholder="Promo code"
-            className="flex-1 bg-ink-700 border border-black/10 rounded-lg px-3 py-2 text-sm"
+            className="min-w-0 flex-1 bg-ink-700 border border-black/10 rounded-lg px-3 py-2 text-sm"
           />
           <button onClick={() => setCoupon(code || undefined)} className="bg-ink-700 border border-black/15 rounded-lg px-3 text-sm hover:border-brand-500">Apply</button>
         </div>
@@ -74,6 +75,8 @@ export default function CartPage() {
           Checkout
         </Link>
       </aside>
+      </div>
+      <p className="page-note">Need to change your selection? <Link href="/menu">Return to the menu</Link>. For ingredient or allergy questions, <Link href="/support">speak to our team</Link> before ordering.</p>
     </div>
   );
 }
