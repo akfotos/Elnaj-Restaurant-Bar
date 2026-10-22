@@ -22,10 +22,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="dining-intro dining-container">
-        <Reveal><h2>Rooted in flavour.<br /><em>Made to be enjoyed.</em></h2></Reveal>
-        <Reveal><p className="dining-copy">Elnaj brings local favourites, bold grills and refreshing drinks together. Explore the menu, order for delivery or pickup, request a table, or follow an existing order — all from one place.</p></Reveal>
-        <Reveal><Link href="/about" className="dining-text-link">About Elnaj <span aria-hidden="true">↗</span></Link></Reveal>
+      <section className="dining-intro dining-container" aria-labelledby="welcome-title">
+        <Reveal><p className="dining-eyebrow">Welcome to ELNAJ</p><h2 id="welcome-title">Where exceptional dining meets<br /><em>unforgettable experiences.</em></h2></Reveal>
+        <Reveal><p className="dining-copy">Discover ELNAJ, a vibrant restaurant, bar and entertainment destination in the heart of Accra, Ghana, where delicious cuisine, refreshing cocktails and warm hospitality come together.</p></Reveal>
+        <Reveal><p className="dining-copy">Offering a unique blend of exceptional dining, stylish ambience and lively entertainment, ELNAJ provides the perfect setting for every occasion. Whether you’re enjoying a casual meal, catching up with friends, celebrating a special moment or experiencing Accra’s nightlife, there’s something for everyone at ELNAJ.</p></Reveal>
+        <Reveal><p className="dining-copy">From intimate dinners to private celebrations and unforgettable nights, experience great food, great music and memorable moments at ELNAJ — where every visit is an experience worth sharing.</p></Reveal>
+        <Reveal><Link href="/reservation" className="dining-button dining-button-burgundy">Reserve a table <span aria-hidden="true">↗</span></Link></Reveal>
       </section>
 
       <section className="dining-container pb-24 md:pb-36" aria-labelledby="booking-title">
@@ -40,6 +42,7 @@ export default function Home() {
               <h3 className="font-serif text-3xl tracking-tight">{area.name}</h3>
               <p className="dining-copy mt-5 mb-8">{area.description}</p>
               <Link href={`/reservation?area=${area.id}#reservation-form`} className="dining-text-link" aria-label={`Request a table — ${area.name}`}>Book a table <span aria-hidden="true">↗</span></Link>
+              {area.id === "private" && <div className="mt-6"><Link href="/events" className="dining-text-link">Private hire &amp; events <span aria-hidden="true">↗</span></Link></div>}
             </Reveal>
           ))}
         </div>

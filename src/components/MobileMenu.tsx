@@ -9,6 +9,7 @@ const LINKS = [
   ["About Elnaj", "/about"],
   ["Menu", "/menu"],
   ["Book a table", "/reservation"],
+  ["Private hire & events", "/events"],
   ["Track Order", "/track"],
   ["Contact & enquiries", "/support"],
   ["FAQ", "/faq"],
