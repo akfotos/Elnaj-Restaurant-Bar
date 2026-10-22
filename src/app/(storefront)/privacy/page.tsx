@@ -36,6 +36,7 @@ export default function PrivacyPage() {
             <li><strong>Guest checkout data:</strong> name, email, phone, and address provided without creating an account.</li>
             <li><strong>Social login data:</strong> if you sign in with Google or Apple, we receive your name, email address, and a unique identifier from that provider. We do not receive your provider password.</li>
             <li><strong>Support data:</strong> messages, refund requests, and correspondence you send us.</li>
+            <li><strong>Reservation request data:</strong> name, email, phone number, preferred date and time, party size, optional notes, and staff review status.</li>
             <li><strong>Reviews and wishlists:</strong> product reviews, ratings, and items you save to your wishlist.</li>
             <li><strong>Technical data:</strong> standard server logs (IP address, browser type, pages visited, timestamps) used for security and debugging.</li>
           </ul>
@@ -48,6 +49,7 @@ export default function PrivacyPage() {
             <li>To operate your account: order history, saved addresses, reordering, and wishlists.</li>
             <li>To send order status notifications (confirmation, preparation, dispatch, delivery, cancellation).</li>
             <li>To respond to support requests and resolve disputes.</li>
+            <li>To review table requests and contact you about availability, confirmation or changes to a reservation.</li>
             <li>To maintain the security and integrity of the service (fraud prevention, abuse detection, audit logging of administrative actions).</li>
             <li>To analyse aggregate, non-identifying trends (e.g. popular dishes, delivery times) to improve our menu and service.</li>
             <li>To comply with legal, tax, and accounting obligations.</li>

@@ -5,6 +5,7 @@ import DiningInvitation from "@/components/DiningInvitation";
 export const metadata = { title: "FAQ & Delivery Info" };
 
 const FAQS = [
+  { q: "How do I book a table?", a: "Use Book a table to submit your preferred date, time and party size. This sends a request for staff review, not a confirmed booking. Please wait for our team to contact you and confirm availability. Reservation times are in Accra local time (GMT)." },
   { q: "Where do you deliver?", a: "We deliver within the zones listed at checkout. Enter your postal/area code to see fees and estimated times." },
   { q: "How long does delivery take?", a: "Typically 30–60 minutes depending on your zone and order size. You can also choose a scheduled time slot." },
   { q: "Can I pick up my order?", a: "Yes — choose Pickup at checkout and collect from our restaurant. We'll notify you when it's ready." },

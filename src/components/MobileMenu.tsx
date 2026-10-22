@@ -8,6 +8,7 @@ const LINKS = [
   ["Home", "/"],
   ["About Elnaj", "/about"],
   ["Menu", "/menu"],
+  ["Book a table", "/reservation"],
   ["Track Order", "/track"],
   ["Contact & enquiries", "/support"],
   ["FAQ", "/faq"],

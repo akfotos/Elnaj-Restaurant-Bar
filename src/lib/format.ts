@@ -1,4 +1,6 @@
 export const CURRENCY = "GHS";
+export const RESERVATION_STATUSES = ["PENDING", "CONFIRMED", "DECLINED", "CANCELLED"] as const;
+export const RESERVATION_TIME_ZONE = "Africa/Accra";
 
 export function money(amount: number) {
   return `${CURRENCY} ${amount.toFixed(2)}`;

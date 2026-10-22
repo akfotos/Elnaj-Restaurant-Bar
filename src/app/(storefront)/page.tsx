@@ -14,7 +14,7 @@ export default function Home() {
           <p className="dining-eyebrow">Elnaj Restaurant &amp; Bar</p>
           <h1 id="hero-title">Good food.<br /><em>Great company.</em></h1>
           <p className="hero-description">Local favourites. Bold grills. Something worth sipping.</p>
-          <div className="dining-actions"><Link href="/menu" className="dining-button dining-button-light">Explore the menu <span aria-hidden="true">↗</span></Link></div>
+          <div className="dining-actions"><Link href="/reservation" className="dining-button dining-button-light">Book a table <span aria-hidden="true">↗</span></Link></div>
         </div>
       </section>
 

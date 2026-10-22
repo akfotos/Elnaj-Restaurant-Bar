@@ -7,6 +7,7 @@ const LINKS = [
   ["Home", "/"],
   ["About", "/about"],
   ["Menu", "/menu"],
+  ["Book a table", "/reservation"],
   ["Contact", "/support"],
 ];
 

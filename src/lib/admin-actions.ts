@@ -3,9 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
-import { slugify } from "@/lib/format";
+import { slugify, RESERVATION_STATUSES } from "@/lib/format";
 import { setSetting } from "@/lib/settings";
 import type { OrderStatus } from "@prisma/client";
+import { z } from "zod";
 
 async function audit(action: string, entity: string, entityId?: string, detail?: string) {
   const actor = await requireAdmin();
@@ -133,4 +134,19 @@ export async function resolveSupport(id: string) {
   if (!(await requireAdmin())) throw new Error("Forbidden");
   await db.supportMessage.update({ where: { id }, data: { resolved: true } });
   revalidatePath("/admin/support");
+}
+
+export async function updateReservationStatus(input: { id: string; status: string; currentStatus: string; guestContacted: boolean }) {
+  const actor = await requireAdmin();
+  if (!actor) throw new Error("Forbidden");
+  const data = z.object({ id: z.string().cuid(), status: z.enum(RESERVATION_STATUSES), currentStatus: z.enum(RESERVATION_STATUSES), guestContacted: z.boolean() }).parse(input);
+  if (data.status !== "PENDING" && !data.guestContacted) throw new Error("Contact the guest before changing the request status.");
+  await db.$transaction(async (tx) => {
+    const reservation = await tx.reservation.findUniqueOrThrow({ where: { id: data.id } });
+    if (data.status === "CONFIRMED" && reservation.requestedAt <= new Date()) throw new Error("A past reservation cannot be confirmed.");
+    const updated = await tx.reservation.updateMany({ where: { id: data.id, status: data.currentStatus }, data: { status: data.status } });
+    if (!updated.count) throw new Error("This request changed. Refresh before updating it.");
+    await tx.auditLog.create({ data: { actorId: actor.id, actorName: actor.name, action: "update-status", entity: "Reservation", entityId: data.id, detail: `${data.currentStatus} to ${data.status}; guest contacted: ${data.guestContacted}` } });
+  });
+  revalidatePath("/admin/reservations");
 }

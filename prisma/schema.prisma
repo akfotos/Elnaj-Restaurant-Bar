@@ -242,6 +242,30 @@ model SupportMessage {
   createdAt DateTime @default(now())
 }
 
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  DECLINED
+  CANCELLED
+}
+
+model Reservation {
+  id          String            @id @default(cuid())
+  requestId   String            @unique
+  name        String
+  email       String
+  phone       String
+  requestedAt DateTime
+  guests      Int
+  notes       String            @default("")
+  status      ReservationStatus @default(PENDING)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([status, requestedAt])
+  @@index([email, createdAt])
+}
+
 model AuditLog {
   id        String   @id @default(cuid())
   actorId   String?

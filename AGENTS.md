@@ -11,13 +11,20 @@ Next.js 15 (App Router) + TypeScript + Tailwind v4 + Prisma 6 + SQLite. Zustand 
 - Homepage stock footage: “Chef cooking on a large grill” (Mixkit item 4678), https://mixkit.co/free-stock-video/chef-cooking-on-a-large-grill-4678/ — listed under the Mixkit Stock Video Free License for commercial/personal use: https://mixkit.co/license/#videoFree.
 - The video is served from Mixkit’s CDN via `src/components/HeroVideo.tsx`. Keep a poster fallback, muted inline playback, a pause control, and reduced-motion handling when replacing it with Elnaj footage.
 
+## Reservations
+- `/reservation` collects staff-confirmed requests; `/admin/reservations` is the protected review queue. Submitted requests are PENDING, not guaranteed bookings. Times are Africa/Accra (GMT).
+- Staff must contact guests manually before recording confirmation, decline or cancellation. No email/SMS provider is connected, and changing status sends no notification.
+- Before enabling this feature, correct `DATABASE_URL` and apply the additive patch once: `npx prisma db execute --file prisma/reservations.sql --schema prisma/schema.prisma`. Then run `npx prisma generate`. The patch creates only the new enum/table/indexes and enables RLS; it has not been applied by the coding agent. Do not replace it with `db push`, which would omit the SQL-only RLS and party-size check.
+- Reservation data is server-only. The backend connection must have access through the table-owning role; the SQL grants no public guest access. Keep database credentials off the client.
+- Public submissions validate future calendar dates, contacts and whole party sizes (1–99 requests, not a statement of venue capacity), use idempotent request IDs, and limit requests per email. Status changes require staff authentication and write audit records.
+
 ## Commands
 - `npm run dev` — dev server
 - `npm run build` — production build
 - `npx prisma db push` — sync schema to SQLite (`prisma/dev.db`)
 - `npx tsx prisma/seed.ts` — seed admin user, categories, products, zones, coupons
 - `npx tsc --noEmit` — typecheck
-- `npx tsx --test src/lib/*.test.ts` — verify PDF generation, pagination, special characters and legacy menu redirects
+- `npx tsx --test src/lib/*.test.ts` — verify PDF generation, legacy menu redirects and reservation validation/API guards
 
 ## Credentials (dev)
 - Admin: `admin@elnaj.com` / `admin1234` → `/admin`
