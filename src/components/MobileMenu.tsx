@@ -7,10 +7,7 @@ import { usePathname } from "next/navigation";
 const LINKS = [
   ["Home", "/"],
   ["About Elnaj", "/about"],
-  ["Full menu", "/menu"],
-  ["Food", "/food"],
-  ["Drinks", "/drinks"],
-  ["Vegan", "/menu?tag=vegan"],
+  ["Menu", "/menu"],
   ["Track Order", "/track"],
   ["Contact & enquiries", "/support"],
   ["FAQ", "/faq"],

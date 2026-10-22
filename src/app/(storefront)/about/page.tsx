@@ -21,7 +21,7 @@ export default function AboutPage() {
           { title: "Elnaj, wherever you are", text: "Bring your favourites to your table with delivery to supported zones, or choose pickup at checkout." },
         ].map((value, index) => <Reveal key={value.title} delay={index * 80}><div className="journey-step"><span className="journey-number">0{index + 1}</span><h3>{value.title}</h3><p className="dining-copy">{value.text}</p></div></Reveal>)}
       </div></div></section>
-      <section className="dining-container about-next"><p className="dining-eyebrow">The next chapter is on your plate</p><h2>Come for the flavour.<br /><em>Find your favourite.</em></h2><div className="dining-actions"><Link href="/food" className="dining-button dining-button-burgundy">Explore food <span aria-hidden="true">↗</span></Link><Link href="/drinks" className="dining-text-link">Discover drinks <span aria-hidden="true">↗</span></Link></div></section>
+      <section className="dining-container about-next"><p className="dining-eyebrow">The next chapter is on your plate</p><h2>Come for the flavour.<br /><em>Find your favourite.</em></h2><div className="dining-actions"><Link href="/menu" className="dining-button dining-button-burgundy">Explore the menu <span aria-hidden="true">↗</span></Link></div></section>
       <DiningInvitation />
     </div>
   );

@@ -7,7 +7,6 @@ const LINKS = [
   ["Home", "/"],
   ["About", "/about"],
   ["Menu", "/menu"],
-  ["Drinks", "/drinks"],
   ["Contact", "/support"],
 ];
 
@@ -16,7 +15,7 @@ export default function HeaderNav() {
   return (
     <nav aria-label="Main navigation" className="hidden xl:flex items-center gap-1 mx-auto px-2 py-1">
       {LINKS.map(([label, href]) => {
-        const active = href === "/" ? pathname === "/" : pathname.startsWith(href) || (href === "/menu" && pathname.startsWith("/food"));
+        const active = href === "/" ? pathname === "/" : pathname.startsWith(href) || (href === "/menu" && pathname.startsWith("/product/"));
         return (
           <Link
             key={href}

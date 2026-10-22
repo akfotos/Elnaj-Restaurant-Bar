@@ -11,7 +11,7 @@ export default async function Header() {
   return (
     <header id="top" className="sticky top-3 z-40 px-3 sm:px-4">
       {announcement && (
-        <div className="bg-brand-600 text-ink-900 text-center text-xs font-semibold py-1.5 px-4 rounded-b-2xl -mt-3 mb-1.5">
+        <div className="text-stone-500 text-center text-[11px] py-2 px-4 -mt-3 mb-2">
           {announcement}
         </div>
       )}
@@ -44,14 +44,9 @@ export default async function Header() {
                   </Link>
                 </>
               ) : (
-                <>
-                  <Link href="/login" className="text-sm font-medium text-white/80 hover:text-white px-4 py-2 rounded-full bg-white/10 transition">
-                    Login
-                  </Link>
-                  <Link href="/register" className="text-sm font-semibold bg-white text-[#1c1917] rounded-full px-5 py-2 hover:bg-[#e7e5e4] transition">
-                    Sign up
-                  </Link>
-                </>
+                <Link href="/login" className="text-sm font-medium text-white/80 hover:text-white px-4 py-2 transition">
+                  Sign in
+                </Link>
               )}
             </div>
           </div>

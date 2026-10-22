@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function DiningInvitation() {
   return (
-    <section className="dining-invitation">
-      <div><p className="dining-eyebrow">A little help from our team</p><h2>Let’s make it <em>your kind of meal.</em></h2><p>Questions about a dish, dietary needs or an existing order? Start a conversation with Elnaj.</p></div>
-      <Link href="/support" className="dining-button dining-button-outline">Get in touch <span aria-hidden="true">↗</span></Link>
-    </section>
+    <div className="dining-container dining-help-line">
+      <p>Questions about a dish or an order?</p>
+      <Link href="/support" className="dining-text-link">Contact our team <span aria-hidden="true">↗</span></Link>
+    </div>
   );
 }

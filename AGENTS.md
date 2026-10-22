@@ -5,13 +5,19 @@ Next.js 15 (App Router) + TypeScript + Tailwind v4 + Prisma 6 + SQLite. Zustand 
 ## Design direction
 - Keep Elnaj’s ivory-and-burgundy identity and editorial typography. Prefer spacious, minimalist layouts with generous gutters, restrained decoration, borderless product cards, and progressive disclosure for secondary controls.
 
+- Keep food and drink listings, category browsing, prices and menu downloads on `/menu`. Other pages should link there instead of repeating menu previews or recommendations; individual product pages remain for details and purchasing.
+
+## Hero media
+- Homepage stock footage: “Chef cooking on a large grill” (Mixkit item 4678), https://mixkit.co/free-stock-video/chef-cooking-on-a-large-grill-4678/ — listed under the Mixkit Stock Video Free License for commercial/personal use: https://mixkit.co/license/#videoFree.
+- The video is served from Mixkit’s CDN via `src/components/HeroVideo.tsx`. Keep a poster fallback, muted inline playback, a pause control, and reduced-motion handling when replacing it with Elnaj footage.
+
 ## Commands
 - `npm run dev` — dev server
 - `npm run build` — production build
 - `npx prisma db push` — sync schema to SQLite (`prisma/dev.db`)
 - `npx tsx prisma/seed.ts` — seed admin user, categories, products, zones, coupons
 - `npx tsc --noEmit` — typecheck
-- `npx tsx --test src/lib/menu-pdf.test.ts` — verify PDF generation, pagination, empty menus and special characters
+- `npx tsx --test src/lib/*.test.ts` — verify PDF generation, pagination, special characters and legacy menu redirects
 
 ## Credentials (dev)
 - Admin: `admin@elnaj.com` / `admin1234` → `/admin`

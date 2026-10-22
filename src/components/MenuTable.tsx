@@ -23,7 +23,7 @@ export default function MenuTable({ products, categories }: {
                 <tbody role="rowgroup">{dishes.map((product) => (
                   <tr key={product.id} role="row">
                     <th scope="row" role="rowheader"><Link href={`/product/${product.slug}`}>{product.name} <span aria-hidden="true">↗</span></Link>{product.trackStock && product.stock <= 0 && <span className="menu-stock-note">Currently unavailable</span>}</th>
-                    <td role="cell"><p>{product.description}</p>{product.ingredients && <p className="menu-table-detail"><strong>Ingredients:</strong> {product.ingredients}</p>}{product.allergens && <p className="menu-table-detail"><strong>Allergen information:</strong> {product.allergens}</p>}{product.dietaryLabels && <p className="menu-table-labels">{product.dietaryLabels.split(",").filter(Boolean).join(" · ")}</p>}</td>
+                    <td role="cell"><p>{product.description}</p>{(product.ingredients || product.allergens || product.dietaryLabels) && <details className="menu-dish-details"><summary>Ingredients &amp; dietary information</summary>{product.ingredients && <p className="menu-table-detail"><strong>Ingredients:</strong> {product.ingredients}</p>}{product.allergens && <p className="menu-table-detail"><strong>Allergen information:</strong> {product.allergens}</p>}{product.dietaryLabels && <p className="menu-table-labels">{product.dietaryLabels.split(",").filter(Boolean).join(" · ")}</p>}</details>}</td>
                     <td className="menu-table-price" role="cell"><span>{money(product.price)}</span><small>{product.unitLabel}</small>{product.variants.map((variant) => <small key={variant.id}>{variant.name}: {money(variant.price)}</small>)}</td>
                   </tr>
                 ))}</tbody>

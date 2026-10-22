@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import ProductCard from "@/components/ProductCard";
 import DiningInvitation from "@/components/DiningInvitation";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
@@ -27,15 +26,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ? product.reviews.reduce((s, r) => s + r.rating, 0) / product.reviews.length
     : null;
 
-  const related = await db.product.findMany({
-    where: { categoryId: product.categoryId, id: { not: product.id }, isActive: true },
-    take: 4,
-  });
-
   return (
     <div className="dining-editorial">
       <div className="dining-container dining-product-detail">
-      <nav aria-label="Breadcrumb" className="product-breadcrumb"><Link href="/menu">Our menu</Link><span aria-hidden="true">/</span><Link href={product.category.slug === "drinks" ? "/drinks" : `/food?category=${product.category.slug}`}>{product.category.name}</Link></nav>
+      <nav aria-label="Breadcrumb" className="product-breadcrumb"><Link href="/menu">Our menu</Link><span aria-hidden="true">/</span><Link href={`/menu?category=${encodeURIComponent(product.category.slug)}`}>{product.category.name}</Link></nav>
       <div className="grid md:grid-cols-2 gap-10">
         <div className="animate-fade-in relative aspect-square bg-ink-800 rounded-2xl overflow-hidden border border-black/10">
           {product.image ? (
@@ -133,16 +127,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </div>
       </section>
 
-      {related.length > 0 && (
-        <section className="mt-16">
-          <h2 className="text-xl font-bold mb-4">You may also like</h2>
-          <div className="dining-product-grid">
-            {related.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </section>
-      )}
+      <div className="mt-12"><Link href="/menu" className="dining-text-link">Back to the menu <span aria-hidden="true">↗</span></Link></div>
       </div>
       <DiningInvitation />
     </div>
