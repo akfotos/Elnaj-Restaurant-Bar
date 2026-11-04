@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { requiresPriceConfirmation } from "@/lib/menu-pricing";
 import { useCart, type Extra } from "@/lib/cart";
 import { money } from "@/lib/format";
 import type { Product, ProductVariant } from "@prisma/client";
@@ -13,6 +15,13 @@ export default function ProductPurchase({ product }: { product: Product & { vari
   const [selected, setSelected] = useState<string[]>([]);
   const price = variant?.price ?? product.price;
   const out = product.trackStock && product.stock <= 0 && !variant;
+
+  if (requiresPriceConfirmation(product)) return (
+    <div className="mt-6 space-y-4">
+      <p className="text-sm text-stone-500">Please contact our team to confirm the portion, availability and final price before ordering.</p>
+      <Link href="/support#enquiry" className="dining-button dining-button-burgundy">Confirm price with our team</Link>
+    </div>
+  );
 
   const extras: Extra[] = product.extras ? JSON.parse(product.extras) : [];
   const chosen = extras.filter((e) => selected.includes(e.name));

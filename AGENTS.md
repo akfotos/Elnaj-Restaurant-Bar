@@ -23,6 +23,12 @@ Next.js 15 (App Router) + TypeScript + Tailwind v4 + Prisma 6 + SQLite. Zustand 
 - Reservation data is server-only. The backend connection must have access through the table-owning role; the SQL grants no public guest access. Keep database credentials off the client.
 - Public submissions validate future calendar dates, contacts and whole party sizes (1–99 requests, not a statement of venue capacity), use idempotent request IDs, and limit requests per email. Status changes require staff authentication and write audit records.
 
+## Photographed menu updates
+- `src/lib/photographed-menu.ts` contains the 70 transcribed dishes. Prefer legible handwritten corrections; cropped or unclear prices are explicitly provisional, not confirmed handwritten prices. Drinks and unrelated existing dishes are preserved.
+- Preview with `npx tsx prisma/update-menu.ts`; apply with `npx tsx prisma/update-menu.ts --apply` after PostgreSQL connectivity is working. This transactional, repeatable importer upserts categories/products without deleting data or fabricating stock. Do not rerun the demo seed to update menu prices.
+- Price ranges are stored as human-readable `unitLabel` values (`GHS 180–200`, `GHS 20–30`); provisional labels use `Provisional: GHS 120.00`. `src/lib/menu-pricing.ts` formats these consistently and requires staff confirmation instead of allowing fixed-price checkout. To approve a fixed price, update the product price and set its unit label to `each` in admin.
+- Database application failed locally; these menu data changes have not been applied. Tests include the complete menu PDF and range/provisional checkout eligibility.
+
 ## Commands
 - `npm run dev` — dev server
 - `npm run build` — production build

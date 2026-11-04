@@ -1,6 +1,7 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import type { PDFFont } from "pdf-lib";
 import { money } from "./format";
+import { menuPrice } from "./menu-pricing";
 
 export type MenuPdfCategory = {
   name: string;
@@ -97,8 +98,8 @@ export async function createMenuPdf(categories: MenuPdfCategory[], title: string
     }
     for (const product of category.products) {
       ensure(66);
-      const nameLines = wrap(product.name, display, 15, contentWidth - 115);
-      const price = money(product.price);
+      const price = menuPrice(product);
+      const nameLines = wrap(product.name, display, 15, contentWidth - Math.max(115, body.widthOfTextAtSize(price, 11) + 16));
       page.drawText(price, { x: width - margin - body.widthOfTextAtSize(price, 11), y, size: 11, font: body, color: burgundy });
       for (const line of nameLines) {
         ensure(21);

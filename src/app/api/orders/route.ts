@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { getSettings } from "@/lib/settings";
 import { orderNumber } from "@/lib/format";
+import { requiresPriceConfirmation } from "@/lib/menu-pricing";
 
 type Item = { productId: string; variantName?: string; quantity: number; extras?: { name: string; price?: number }[] };
 
@@ -23,6 +24,8 @@ export async function POST(req: NextRequest) {
   const productIds = items.map((i) => i.productId);
   const products = await db.product.findMany({ where: { id: { in: productIds }, isActive: true }, include: { variants: true } });
   if (products.length !== items.length) return NextResponse.json({ error: "Some items are no longer available" }, { status: 400 });
+
+  if (products.some(requiresPriceConfirmation)) return NextResponse.json({ error: "Please confirm the final price with our team for items with a price range or provisional price." }, { status: 400 });
 
   const orderItems = items.map((i) => {
     const p = products.find((x) => x.id === i.productId)!;

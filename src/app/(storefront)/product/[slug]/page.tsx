@@ -4,6 +4,7 @@ import DiningInvitation from "@/components/DiningInvitation";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { money } from "@/lib/format";
+import { menuPrice, requiresPriceConfirmation } from "@/lib/menu-pricing";
 import ProductPurchase from "@/components/ProductPurchase";
 import ReviewForm from "@/components/ReviewForm";
 import WishlistButton from "@/components/WishlistButton";
@@ -48,11 +49,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <p className="text-sm text-stone-500 mt-1">★ {avg.toFixed(1)} ({product.reviews.length} reviews)</p>
           )}
           <div className="mt-3 flex items-baseline gap-3">
-            <span className="text-2xl font-bold text-brand-500">{money(product.price)}</span>
+            <span className="text-2xl font-bold text-brand-500">{menuPrice(product)}</span>
             {product.compareAtPrice && (
               <span className="text-stone-500 line-through">{money(product.compareAtPrice)}</span>
             )}
-            <span className="text-sm text-stone-500">{product.unitLabel}</span>
+            {!requiresPriceConfirmation(product) && <span className="text-sm text-stone-500">{product.unitLabel}</span>}
           </div>
           {labels.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-3">
@@ -68,7 +69,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           )}
           <p className="mt-5 text-stone-600 leading-relaxed">{product.description}</p>
           <p className="mt-3 text-sm text-stone-500">Estimated preparation: about {product.prepTimeMins} minutes.</p>
-          <p className="mt-6 text-sm text-stone-500 leading-relaxed">Choose your quantity and any available options before adding this dish to your basket.</p>
+          {!requiresPriceConfirmation(product) && <p className="mt-6 text-sm text-stone-500 leading-relaxed">Choose your quantity and any available options before adding this dish to your basket.</p>}
           <ProductPurchase product={product} />
 
           <div className="mt-8 space-y-4 text-sm">

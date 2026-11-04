@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { money } from "@/lib/format";
+import { menuPrice, requiresPriceConfirmation } from "@/lib/menu-pricing";
 import AddToCartButton from "@/components/AddToCartButton";
 import type { Product } from "@prisma/client";
 
@@ -45,13 +46,13 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
         <div className="mt-auto flex items-center justify-between pt-2">
           <div>
-            <span className="font-bold text-brand-500">{money(product.price)}</span>
+            <span className="font-bold text-brand-500">{menuPrice(product)}</span>
             {product.compareAtPrice && (
               <span className="ml-2 text-sm text-stone-500 line-through">{money(product.compareAtPrice)}</span>
             )}
             {product.weightBased && <span className="block text-xs text-stone-500">{product.unitLabel}</span>}
           </div>
-          <AddToCartButton
+          {requiresPriceConfirmation(product) ? <Link href={`/product/${product.slug}`} className="text-sm text-brand-500 underline">Confirm price</Link> : <AddToCartButton
             disabled={out}
             item={{
               productId: product.id,
@@ -63,7 +64,7 @@ export default function ProductCard({ product }: { product: Product }) {
               weightBased: product.weightBased,
               unitLabel: product.unitLabel,
             }}
-          />
+          />}
         </div>
         {out && <p className="text-xs text-red-400">Out of stock</p>}
       </div>
