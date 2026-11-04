@@ -190,9 +190,6 @@ input, select, textarea {
   .elnaj-home { margin-top: 0; }
   .dining-hero { min-height: 100vh; min-height: 100svh; }
 }
-.hero-video-control { position: absolute; right: 24px; bottom: 24px; z-index: 2; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 10px 16px; border: 1px solid #fff6; border-radius: 24px; background: #241a15b3; color: #fff8ef; font-size: 11px; cursor: pointer; }
-.hero-video-control:hover { background: #241a15; }
-.hero-video-control:focus-visible { outline: 2px solid #fff8ef; outline-offset: 4px; }
 .hero-content { position: relative; z-index: 1; padding: 112px 28px; max-width: 900px; }
 .hero-content .dining-eyebrow { margin-bottom: 36px; }
 .elnaj-home h1 { font-size: clamp(3.4rem, 6.6vw, 6.4rem); line-height: 1.08; }

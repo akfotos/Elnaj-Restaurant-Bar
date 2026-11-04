@@ -15,7 +15,7 @@ Next.js 15 (App Router) + TypeScript + Tailwind v4 + Prisma 6 + SQLite. Zustand 
 
 ## Hero media
 - Homepage hero footage is the user-supplied `6506380_Seafood_Bbq_1280x720.mp4`, served locally as `public/seafood-bbq.mp4` via `src/components/HeroVideo.tsx`. Its matching poster is extracted from the footage at one second: `public/seafood-bbq-poster.jpg`.
-- Keep the poster fallback, muted looping inline autoplay on fresh visits, pause/play control, and reduced-motion/data-saver handling. The new footage replaces the old Mixkit CDN video; no external video host is required. At desktop widths (1024px and above), the hero fills at least the viewport height without the former 820px cap; mobile sizing remains separate.
+- Keep the poster fallback, muted looping inline autoplay on fresh visits, and reduced-motion/data-saver handling. The visible pause/play control was removed at the user’s request. The new footage replaces the old Mixkit CDN video; no external video host is required. At desktop widths (1024px and above), the hero fills at least the viewport height without the former 820px cap; mobile sizing remains separate.
 
 ## Reservations
 - `/reservation` collects staff-confirmed requests; `/admin/reservations` is the protected review queue. Submitted requests are PENDING, not guaranteed bookings. Times are Africa/Accra (GMT).
