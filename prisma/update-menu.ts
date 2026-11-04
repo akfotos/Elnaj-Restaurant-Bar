@@ -17,7 +17,7 @@ async function main() {
       for (const [index, section] of photographedMenu.entries()) {
         const category = await tx.category.upsert({
           where: { slug: section.slug },
-          update: { name: section.name },
+          update: { name: section.name, sortOrder: index + 10 },
           create: { name: section.name, slug: section.slug, sortOrder: index + 10 },
         });
         for (const product of products.filter((item) => item.categorySlug === section.slug)) {

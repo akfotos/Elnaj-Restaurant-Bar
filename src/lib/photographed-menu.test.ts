@@ -1,8 +1,19 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { photographedMenu, photographedMenuProducts } from "./photographed-menu";
+import { arrangeMenuCategories, arrangeMenuProducts, photographedMenu, photographedMenuProducts } from "./photographed-menu";
 import { menuPrice, requiresPriceConfirmation } from "./menu-pricing";
 import { createMenuPdf } from "./menu-pdf";
+
+test("menu sections and dishes follow the photographed sequence without dropping other items", () => {
+  const categories = photographedMenu.map(({ name, slug }) => ({ name, slug }));
+  assert.deepEqual(categories.map((category) => category.name), ["Continental", "Rice Dishes", "Sauces", "Local", "Sunday Special", "Extras"]);
+  assert.deepEqual(arrangeMenuCategories([{ name: "Drinks", slug: "drinks" }, ...[...categories].reverse()]), [...categories, { name: "Drinks", slug: "drinks" }]);
+  const products = photographedMenuProducts();
+  const drink = { ...products[0], slug: "water", name: "Water" };
+  assert.deepEqual(arrangeMenuProducts([drink, ...[...products].reverse()]), [...products, drink]);
+  assert.deepEqual(arrangeMenuProducts([]), []);
+  assert.equal(arrangeMenuCategories([{ name: "Spaghetti & Sauces", slug: "spaghetti-sauces" }])[0].name, "Sauces");
+});
 
 test("photographed dishes have unique stable slugs and positive prices", () => {
   const products = photographedMenuProducts();

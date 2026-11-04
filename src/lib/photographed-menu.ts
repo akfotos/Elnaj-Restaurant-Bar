@@ -28,7 +28,7 @@ export const photographedMenu: MenuSection[] = [
     { name: "Chicken & Beef Mixed Fried Rice or Jollof", price: 120 },
     { name: "Chef’s Special Assorted Rice or Jollof", price: 130, description: "Shrimps, chicken, beef and sausages." },
   ] },
-  { name: "Spaghetti & Sauces", slug: "spaghetti-sauces", entries: [
+  { name: "Sauces", slug: "spaghetti-sauces", entries: [
     { name: "Vegetable Mixed Spaghetti", price: 60 },
     { name: "Beef Mixed Spaghetti", price: 100 },
     { name: "Chicken Mixed Spaghetti", price: 95 },
@@ -39,7 +39,7 @@ export const photographedMenu: MenuSection[] = [
     { name: "Chef’s Special", price: 110, description: "Chicken, beef, shrimps or octopus.", provisional: true },
     { name: "Seafood", price: 130, description: "Shrimps, octopus and fish.", provisional: true },
   ] },
-  { name: "Local Favourites", slug: "local", entries: [
+  { name: "Local", slug: "local", entries: [
     { name: "Red Snapper with Jollof or Fried Rice", price: 90, provisional: true },
     { name: "Red Snapper with Banku", price: 80, provisional: true },
     { name: "Tilapia with Banku", slug: "banku-tilapia", price: 120, provisional: true },
@@ -89,6 +89,17 @@ export const photographedMenu: MenuSection[] = [
     { name: "Banku Only", price: 5 },
   ] },
 ];
+
+export function arrangeMenuCategories<T extends { slug: string; name: string }>(categories: T[]): T[] {
+  const ranks = new Map(photographedMenu.map((section, index) => [section.slug, index]));
+  return categories.map((category) => ({ ...category, name: photographedMenu.find((section) => section.slug === category.slug)?.name ?? category.name }))
+    .sort((a, b) => (ranks.get(a.slug) ?? photographedMenu.length) - (ranks.get(b.slug) ?? photographedMenu.length));
+}
+
+export function arrangeMenuProducts<T extends { slug: string }>(products: T[]): T[] {
+  const ranks = new Map(photographedMenuProducts().map((product, index) => [product.slug, index]));
+  return [...products].sort((a, b) => (ranks.get(a.slug) ?? ranks.size) - (ranks.get(b.slug) ?? ranks.size));
+}
 
 export function photographedMenuProducts() {
   return photographedMenu.flatMap((section) => section.entries.map((entry) => ({

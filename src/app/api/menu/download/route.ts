@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { createMenuPdf } from "@/lib/menu-pdf";
+import { arrangeMenuCategories, arrangeMenuProducts } from "@/lib/photographed-menu";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,15 +14,16 @@ export async function GET(request: NextRequest) {
       where: scope === "drinks" ? { slug: "drinks" } : scope === "food" ? { slug: { not: "drinks" } } : {},
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
       select: {
+        slug: true,
         name: true,
         products: {
           where: { isActive: true },
           orderBy: { name: "asc" },
-          select: { name: true, description: true, ingredients: true, allergens: true, dietaryLabels: true, price: true, unitLabel: true, trackStock: true, stock: true, variants: { select: { name: true, price: true }, orderBy: { price: "asc" } } },
+          select: { slug: true, name: true, description: true, ingredients: true, allergens: true, dietaryLabels: true, price: true, unitLabel: true, trackStock: true, stock: true, variants: { select: { name: true, price: true }, orderBy: { price: "asc" } } },
         },
       },
     });
-    const pdf = await createMenuPdf(categories, scope === "all" ? "Food & Drinks Menu" : scope === "food" ? "Food Menu" : "Drinks Menu");
+    const pdf = await createMenuPdf(arrangeMenuCategories(categories).map((category) => ({ ...category, products: arrangeMenuProducts(category.products) })),  scope === "all" ? "Food & Drinks Menu" : scope === "food" ? "Food Menu" : "Drinks Menu");
     return new NextResponse(new Uint8Array(pdf), {
       headers: { "Content-Type": "application/pdf", "Content-Disposition": `attachment; filename="elnaj-${scope === "all" ? "full" : scope}-menu.pdf"`, "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
     });

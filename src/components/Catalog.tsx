@@ -7,6 +7,7 @@ import MenuDownloadButton from "@/components/MenuDownloadButton";
 import Reveal from "@/components/Reveal";
 import PageIntro from "@/components/PageIntro";
 import type { Prisma } from "@prisma/client";
+import { arrangeMenuCategories, arrangeMenuProducts } from "@/lib/photographed-menu";
 
 type SP = Record<string, string | string[] | undefined>;
 
@@ -18,7 +19,7 @@ export default async function Catalog({ searchParams, title }: {
   const q = typeof sp.q === "string" ? sp.q : "";
   const category = typeof sp.category === "string" ? sp.category : "";
   const tag = typeof sp.tag === "string" ? sp.tag : "";
-  const sort = typeof sp.sort === "string" ? sp.sort : "popular";
+  const sort = typeof sp.sort === "string" ? sp.sort : "menu";
   const minPrice = Number(sp.minPrice ?? "") || undefined;
   const maxPrice = Number(sp.maxPrice ?? "") || undefined;
   const inStock = sp.inStock === "1";
@@ -38,11 +39,13 @@ export default async function Catalog({ searchParams, title }: {
     sort === "name" ? { name: "asc" } :
     { isBestseller: "desc" };
 
-  const [products, categories] = await Promise.all([
+  const [queriedProducts, queriedCategories] = await Promise.all([
     db.product.findMany({ where, orderBy, include: { reviews: { select: { rating: true } }, variants: { orderBy: { price: "asc" } } } }),
     db.category.findMany({ orderBy: { sortOrder: "asc" } }),
   ]);
 
+  const categories = arrangeMenuCategories(queriedCategories);
+  const products = sort === "menu" ? arrangeMenuProducts(queriedProducts) : queriedProducts;
   const filtered = minRating
     ? products.filter((p) => {
         if (p.reviews.length === 0) return false;
