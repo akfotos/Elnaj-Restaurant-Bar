@@ -1,18 +1,36 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { arrangeMenuCategories, arrangeMenuProducts, photographedMenu, photographedMenuProducts } from "./photographed-menu";
+import { arrangeMenuProducts, photographedMenuCategories, photographedMenu, photographedMenuProducts } from "./photographed-menu";
 import { menuPrice, requiresPriceConfirmation } from "./menu-pricing";
 import { createMenuPdf } from "./menu-pdf";
 
-test("menu sections and dishes follow the photographed sequence without dropping other items", () => {
-  const categories = photographedMenu.map(({ name, slug }) => ({ name, slug }));
-  assert.deepEqual(categories.map((category) => category.name), ["Continental", "Rice Dishes", "Sauces", "Local", "Sunday Special", "Extras"]);
-  assert.deepEqual(arrangeMenuCategories([{ name: "Drinks", slug: "drinks" }, ...[...categories].reverse()]), [...categories, { name: "Drinks", slug: "drinks" }]);
+test("only photographed dishes appear, with sheet names and order regardless of database names and categories", () => {
+  const categories = photographedMenuCategories();
+  assert.deepEqual(categories.map((category) => category.name), ["Continental", "Rice Dishes", "Continental", "Sauces", "Local", "Sunday Special", "Extras"]);
   const products = photographedMenuProducts();
-  const drink = { ...products[0], slug: "water", name: "Water" };
-  assert.deepEqual(arrangeMenuProducts([drink, ...[...products].reverse()]), [...products, drink]);
+  const databaseProducts = products.map((product) => ({ ...product, name: "Old name", categoryId: "old-category", id: product.slug, stock: 7 }));
+  const drink = { ...databaseProducts[0], slug: "water", name: "Water" };
+  const unrelatedDish = { ...databaseProducts[0], slug: "burger", name: "Burger" };
+  const input = [drink, ...[...databaseProducts].reverse(), unrelatedDish];
+  const arranged = arrangeMenuProducts(input);
+  assert.deepEqual(arranged.map(({ name, slug, categoryId }) => ({ name, slug, categoryId })), products.map(({ name, slug, categorySlug }) => ({ name, slug, categoryId: categorySlug })));
+  assert.ok(arranged.every((product) => product.stock === 7 && product.id === product.slug));
+  assert.equal(input[0].name, "Water");
   assert.deepEqual(arrangeMenuProducts([]), []);
-  assert.equal(arrangeMenuCategories([{ name: "Spaghetti & Sauces", slug: "spaghetti-sauces" }])[0].name, "Sauces");
+  assert.deepEqual(arrangeMenuProducts([drink, unrelatedDish]), []);
+  assert.deepEqual(arrangeMenuProducts([databaseProducts[1], databaseProducts[0]]).map((product) => product.slug), products.slice(0, 2).map((product) => product.slug));
+});
+
+test("section contents retain the sheet sequence, including the repeated Continental heading and continuation of Extras", () => {
+  assert.deepEqual(photographedMenu.map((section) => section.entries.map((entry) => entry.name)), [
+    ["Chicken in Chilli Tomato Sauce", "Grilled or Fried Chicken", "Boneless Chicken in Garlic Butter Sauce", "Fillet Fish in Tomato Sauce", "Red Snapper in Chilli Tomato Sauce", "Thai Rice Chicken", "Thai Rice Beef", "Thai Rice Assorted", "Thai Rice Seafood"],
+    ["Octopus Mixed Fried Rice or Jollof", "Shrimps Mixed Fried Rice or Jollof", "Shrimps & Octopus Fried Rice or Jollof", "Beef Mixed Fried Rice or Jollof", "Chicken mixed with Fried Rice or Jollof", "Chicken & Beef Mixed Fried Rice or Jollof", "Chef’s Special Assorted Rice or Jollof"],
+    ["Plain Omelette", "Spanish Omelette"],
+    ["Vegetable Mixed Spaghetti", "Beef Mixed Spaghetti", "Chicken Mixed Spaghetti", "Shrimps Mixed Spaghetti", "Octopus Mixed Spaghetti", "Chicken & Beef Mixed Spaghetti", "Shrimps & Octopus Mixed Spaghetti", "Chef’s Special", "Seafood (Shrimps Octopus & Fish)"],
+    ["Red Snapper with Jollof or Fried Rice", "Red Snapper with Banku", "Tilapia with Banku", "Banku and Okro", "Palava Sauce with Yam", "Palava Sauce with Plain Rice", "Egg Stew with Yam & Plain Rice", "Egg Stew with Plain Rice", "Egg Stew Only", "Catfish"],
+    ["Goat Neat", "Cow Meat", "Cow Intestine", "Goat Intestine", "Tuna", "Salmon", "Chicken Wings", "Fresh Tilapia", "Boiled Egg", "Fufu", "Omo Tuo"],
+    ["Beef Sauce Only", "Chicken Sauce Only", "Fish Sauce Only", "Octopus Sauce Only", "Shrimps Sauce Only", "Shrimps & Octopus", "Shrimps, Octopus & Fish Sauce", "Chef’s Special Sauce Only", "Chicken Only", "Fried Rice Only", "Jollof Only", "Totato Chips Only", "Yam Chips Only", "Plain Rice Only", "Shito", "Red Fish Only", "Tilapia Only", "Boiled Yam Only", "Tossed Vegetables", "Okro Only", "Palava Sauce Only", "Banku Only"],
+  ]);
 });
 
 test("photographed dishes have unique stable slugs and positive prices", () => {

@@ -9,16 +9,21 @@ import ProductPurchase from "@/components/ProductPurchase";
 import ReviewForm from "@/components/ReviewForm";
 import WishlistButton from "@/components/WishlistButton";
 import { getSessionUser } from "@/lib/auth";
+import { photographedMenuCategories, photographedMenuProducts } from "@/lib/photographed-menu";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = await db.product.findUnique({
+  const entry = photographedMenuProducts().find((item) => item.slug === slug);
+  if (!entry) notFound();
+  const storedProduct = await db.product.findUnique({
     where: { slug },
     include: { variants: true, category: true, reviews: { include: { user: true }, orderBy: { createdAt: "desc" } } },
   });
-  if (!product || !product.isActive) notFound();
+  if (!storedProduct || !storedProduct.isActive) notFound();
+  const category = photographedMenuCategories().find((item) => item.slug === entry.categorySlug)!;
+  const product = { ...storedProduct, name: entry.name, category: { ...storedProduct.category, name: category.name, slug: category.slug } };
   const user = await getSessionUser();
   const nutrition = product.nutrition ? JSON.parse(product.nutrition) : null;
   const allergens = product.allergens?.split(",").filter(Boolean) ?? [];

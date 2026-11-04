@@ -4,6 +4,7 @@ import { getSessionUser } from "@/lib/auth";
 import { getSettings } from "@/lib/settings";
 import { orderNumber } from "@/lib/format";
 import { requiresPriceConfirmation } from "@/lib/menu-pricing";
+import { photographedMenuProducts } from "@/lib/photographed-menu";
 
 type Item = { productId: string; variantName?: string; quantity: number; extras?: { name: string; price?: number }[] };
 
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
 
   // resolve products & prices server-side
   const productIds = items.map((i) => i.productId);
-  const products = await db.product.findMany({ where: { id: { in: productIds }, isActive: true }, include: { variants: true } });
+  const products = await db.product.findMany({ where: { id: { in: productIds }, isActive: true, slug: { in: photographedMenuProducts().map((product) => product.slug) } }, include: { variants: true } });
   if (products.length !== items.length) return NextResponse.json({ error: "Some items are no longer available" }, { status: 400 });
 
   if (products.some(requiresPriceConfirmation)) return NextResponse.json({ error: "Please confirm the final price with our team for items with a price range or provisional price." }, { status: 400 });

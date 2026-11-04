@@ -79,17 +79,6 @@ export default function MenuFilters({
         onBlur={(e) => update("maxPrice", e.target.value)}
         className={`${inputCls} w-24`}
       />
-      <select
-        value={String(current.sort ?? "menu")}
-        onChange={(e) => update("sort", e.target.value)}
-        className={inputCls}
-      >
-        <option value="menu">Printed menu order</option>
-        <option value="popular">Most popular</option>
-        <option value="price-asc">Price: low → high</option>
-        <option value="price-desc">Price: high → low</option>
-        <option value="name">Name A–Z</option>
-      </select>
       <label className="flex items-center gap-2 text-sm text-stone-600">
         <input
           type="checkbox"

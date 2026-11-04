@@ -7,7 +7,7 @@ import MenuDownloadButton from "@/components/MenuDownloadButton";
 import Reveal from "@/components/Reveal";
 import PageIntro from "@/components/PageIntro";
 import type { Prisma } from "@prisma/client";
-import { arrangeMenuCategories, arrangeMenuProducts } from "@/lib/photographed-menu";
+import { arrangeMenuProducts, photographedMenuCategories, photographedMenuProducts } from "@/lib/photographed-menu";
 
 type SP = Record<string, string | string[] | undefined>;
 
@@ -19,33 +19,22 @@ export default async function Catalog({ searchParams, title }: {
   const q = typeof sp.q === "string" ? sp.q : "";
   const category = typeof sp.category === "string" ? sp.category : "";
   const tag = typeof sp.tag === "string" ? sp.tag : "";
-  const sort = typeof sp.sort === "string" ? sp.sort : "menu";
+  const sort = "menu";
   const minPrice = Number(sp.minPrice ?? "") || undefined;
   const maxPrice = Number(sp.maxPrice ?? "") || undefined;
   const inStock = sp.inStock === "1";
   const minRating = Number(sp.minRating ?? "") || 0;
 
-  const where: Prisma.ProductWhereInput = { isActive: true };
-  if (q) where.OR = [{ name: { contains: q, mode: "insensitive" } }, { description: { contains: q, mode: "insensitive" } }];
-  if (category) where.category = { slug: category };
+  const menuEntries = photographedMenuProducts().filter((entry) => (!category || entry.categorySlug === category) && (!q || `${entry.name} ${entry.description}`.toLowerCase().includes(q.toLowerCase())));
+  const where: Prisma.ProductWhereInput = { isActive: true, slug: { in: menuEntries.map((entry) => entry.slug) } };
   if (tag) where.dietaryLabels = { contains: tag };
   if (minPrice !== undefined || maxPrice !== undefined)
     where.price = { gte: minPrice, lte: maxPrice };
   if (inStock) where.OR = [{ trackStock: false }, { stock: { gt: 0 } }];
 
-  const orderBy: Prisma.ProductOrderByWithRelationInput =
-    sort === "price-asc" ? { price: "asc" } :
-    sort === "price-desc" ? { price: "desc" } :
-    sort === "name" ? { name: "asc" } :
-    { isBestseller: "desc" };
-
-  const [queriedProducts, queriedCategories] = await Promise.all([
-    db.product.findMany({ where, orderBy, include: { reviews: { select: { rating: true } }, variants: { orderBy: { price: "asc" } } } }),
-    db.category.findMany({ orderBy: { sortOrder: "asc" } }),
-  ]);
-
-  const categories = arrangeMenuCategories(queriedCategories);
-  const products = sort === "menu" ? arrangeMenuProducts(queriedProducts) : queriedProducts;
+  const queriedProducts = await db.product.findMany({ where, include: { reviews: { select: { rating: true } }, variants: { orderBy: { price: "asc" } } } });
+  const categories = photographedMenuCategories();
+  const products = arrangeMenuProducts(queriedProducts);
   const filtered = minRating
     ? products.filter((p) => {
         if (p.reviews.length === 0) return false;
@@ -54,7 +43,7 @@ export default async function Catalog({ searchParams, title }: {
     : products;
 
   const selectedCategory = categories.find((item) => item.slug === category);
-  const introduction = selectedCategory?.description || (selectedCategory ? `Explore ${selectedCategory.name.toLowerCase()}, compare current prices and open a dish for its options. Ingredients and dietary information are available below each description.` : "Explore Elnaj’s food and drinks, compare prices and choose a dish to see its options. Switch between the menu table and photo cards, or keep a PDF for later.");
+  const introduction = selectedCategory ? `Explore ${selectedCategory.name.toLowerCase()}, compare current prices and open a dish for its options. Ingredients and dietary information are available below each description.` : "Browse Elnaj’s menu in the same order as our printed sheets. Compare prices, open a dish for its details or keep a PDF for later.";
   const basePath = "/menu";
   const view = sp.view === "cards" ? "cards" : "table";
   const viewHref = (nextView: string) => {

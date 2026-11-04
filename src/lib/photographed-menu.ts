@@ -12,21 +12,23 @@ export const photographedMenu: MenuSection[] = [
     { name: "Boneless Chicken in Garlic Butter Sauce", price: 120, description: sides },
     { name: "Fillet Fish in Tomato Sauce", price: 110, description: sides },
     { name: "Red Snapper in Chilli Tomato Sauce", price: 100, description: sides },
-    { name: "Plain Omelette", price: 40 },
-    { name: "Spanish Omelette", price: 45 },
-  ] },
-  { name: "Rice Dishes", slug: "rice-dishes", entries: [
     { name: "Thai Rice Chicken", price: 120 },
     { name: "Thai Rice Beef", price: 130 },
     { name: "Thai Rice Assorted", price: 150 },
     { name: "Thai Rice Seafood", price: 200 },
+  ] },
+  { name: "Rice Dishes", slug: "rice-dishes", entries: [
     { name: "Octopus Mixed Fried Rice or Jollof", price: 120 },
     { name: "Shrimps Mixed Fried Rice or Jollof", price: 120 },
     { name: "Shrimps & Octopus Fried Rice or Jollof", price: 130 },
     { name: "Beef Mixed Fried Rice or Jollof", price: 110 },
-    { name: "Chicken Mixed Fried Rice or Jollof", price: 100 },
+    { name: "Chicken mixed with Fried Rice or Jollof", slug: "chicken-mixed-fried-rice-or-jollof", price: 100 },
     { name: "Chicken & Beef Mixed Fried Rice or Jollof", price: 120 },
     { name: "Chef’s Special Assorted Rice or Jollof", price: 130, description: "Shrimps, chicken, beef and sausages." },
+  ] },
+  { name: "Continental", slug: "continental-omelettes", entries: [
+    { name: "Plain Omelette", price: 40 },
+    { name: "Spanish Omelette", price: 45 },
   ] },
   { name: "Sauces", slug: "spaghetti-sauces", entries: [
     { name: "Vegetable Mixed Spaghetti", price: 60 },
@@ -37,7 +39,7 @@ export const photographedMenu: MenuSection[] = [
     { name: "Chicken & Beef Mixed Spaghetti", price: 100, provisional: true },
     { name: "Shrimps & Octopus Mixed Spaghetti", price: 110, provisional: true },
     { name: "Chef’s Special", price: 110, description: "Chicken, beef, shrimps or octopus.", provisional: true },
-    { name: "Seafood", price: 130, description: "Shrimps, octopus and fish.", provisional: true },
+    { name: "Seafood (Shrimps Octopus & Fish)", slug: "seafood", price: 130, description: "Shrimps, octopus and fish.", provisional: true },
   ] },
   { name: "Local", slug: "local", entries: [
     { name: "Red Snapper with Jollof or Fried Rice", price: 90, provisional: true },
@@ -52,7 +54,7 @@ export const photographedMenu: MenuSection[] = [
     { name: "Catfish", price: 180, range: "GHS 180–200" },
   ] },
   { name: "Sunday Special", slug: "sunday-special", entries: [
-    { name: "Goat Meat", price: 40 },
+    { name: "Goat Neat", slug: "goat-meat", price: 40 },
     { name: "Cow Meat", price: 30 },
     { name: "Cow Intestine", price: 20 },
     { name: "Goat Intestine", price: 30 },
@@ -76,7 +78,7 @@ export const photographedMenu: MenuSection[] = [
     { name: "Chicken Only", price: 50 },
     { name: "Fried Rice Only", price: 35, provisional: true },
     { name: "Jollof Only", price: 40 },
-    { name: "Potato Chips Only", price: 30 },
+    { name: "Totato Chips Only", slug: "potato-chips-only", price: 30 },
     { name: "Yam Chips Only", price: 25 },
     { name: "Plain Rice Only", price: 30 },
     { name: "Shito", price: 5 },
@@ -90,15 +92,17 @@ export const photographedMenu: MenuSection[] = [
   ] },
 ];
 
-export function arrangeMenuCategories<T extends { slug: string; name: string }>(categories: T[]): T[] {
-  const ranks = new Map(photographedMenu.map((section, index) => [section.slug, index]));
-  return categories.map((category) => ({ ...category, name: photographedMenu.find((section) => section.slug === category.slug)?.name ?? category.name }))
-    .sort((a, b) => (ranks.get(a.slug) ?? photographedMenu.length) - (ranks.get(b.slug) ?? photographedMenu.length));
+export function photographedMenuCategories() {
+  return photographedMenu.map(({ name, slug }) => ({ id: slug, name, slug }));
 }
 
-export function arrangeMenuProducts<T extends { slug: string }>(products: T[]): T[] {
-  const ranks = new Map(photographedMenuProducts().map((product, index) => [product.slug, index]));
-  return [...products].sort((a, b) => (ranks.get(a.slug) ?? ranks.size) - (ranks.get(b.slug) ?? ranks.size));
+export function arrangeMenuProducts<T extends { slug: string }>(products: T[]) {
+  const entries = photographedMenuProducts();
+  const bySlug = new Map(products.map((product) => [product.slug, product]));
+  return entries.flatMap((entry) => {
+    const product = bySlug.get(entry.slug);
+    return product ? [{ ...product, name: entry.name, categoryId: entry.categorySlug }] : [];
+  });
 }
 
 export function photographedMenuProducts() {
