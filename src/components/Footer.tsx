@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getSetting } from "@/lib/settings";
 
 export default async function Footer() {
-  const address = await getSetting("pickupAddress");
+  const address = await getSetting("pickupAddress").catch(() => "");
   return (
     <footer className="elnaj-footer footer-simple">
       <div className="dining-container footer-grid">

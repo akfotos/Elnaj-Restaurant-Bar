@@ -6,8 +6,8 @@ import MobileMenu from "@/components/MobileMenu";
 import HeaderNav from "@/components/HeaderNav";
 
 export default async function Header() {
-  const user = await getSessionUser();
-  const announcement = await getSetting("announcement");
+  const user = await getSessionUser().catch(() => null);
+  const announcement = await getSetting("announcement").catch(() => "");
   return (
     <header id="top" tabIndex={-1} className="sticky top-3 z-40 px-3 sm:px-4">
       {announcement && (
@@ -32,6 +32,7 @@ export default async function Header() {
           <HeaderNav />
 
           <div className="ml-auto flex items-center gap-2 shrink-0">
+            <Link href="/menu" className="xl:hidden text-sm font-medium text-white px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 transition">Menu</Link>
             <CartButton />
             <div className="hidden md:flex items-center gap-2">
               {user ? (
