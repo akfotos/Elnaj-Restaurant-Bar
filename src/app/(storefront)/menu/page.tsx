@@ -10,7 +10,7 @@ export default function MenuPage() {
   const products = photographedMenuProducts();
 
   return (
-    <div className="dining-editorial">
+    <div className="dining-editorial menu-page">
       <div className="dining-container dining-catalog">
         <PageIntro eyebrow="The Elnaj kitchen" title="Our menu." description="From salads and sauces to traditional favourites and Sunday specials. Browse each section below; all prices are in Ghana cedis (GHS).">
           <div className="mt-6"><MenuDownloadButton /></div>
