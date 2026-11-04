@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const VIDEO = "https://assets.mixkit.co/videos/4678/4678-720.mp4";
-const POSTER = "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&q=85";
+const VIDEO = "/seafood-bbq.mp4";
+const POSTER = "/seafood-bbq-poster.jpg";
 
 export default function HeroVideo() {
   const video = useRef<HTMLVideoElement>(null);
@@ -28,7 +28,7 @@ export default function HeroVideo() {
 
   return (
     <>
-      <Image src={POSTER} alt="Flame-grilled skewers and fresh accompaniments" fill priority sizes="100vw" className="object-cover" />
+      <Image src={POSTER} alt="Seafood grilling over flames with lemon and fresh herbs" fill priority sizes="100vw" className="object-cover" />
       {enabled && !failed && <video
         ref={video}
         className={`hero-background-video ${ready ? "is-ready" : ""}`}

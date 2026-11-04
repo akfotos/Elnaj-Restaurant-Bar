@@ -13,8 +13,8 @@ Next.js 15 (App Router) + TypeScript + Tailwind v4 + Prisma 6 + SQLite. Zustand 
 - Motion should be subtle: one-time `Reveal` entrances, restrained hover effects, and full `prefers-reduced-motion` support. Reveal content must remain visible without JavaScript. The shared storefront includes `BackToTop`, which appears after 480px of scrolling and returns focus to the `#top` header.
 
 ## Hero media
-- Homepage stock footage: “Chef cooking on a large grill” (Mixkit item 4678), https://mixkit.co/free-stock-video/chef-cooking-on-a-large-grill-4678/ — listed under the Mixkit Stock Video Free License for commercial/personal use: https://mixkit.co/license/#videoFree.
-- The video is served from Mixkit’s CDN via `src/components/HeroVideo.tsx`. Keep a poster fallback, muted inline playback, a pause control, and reduced-motion handling when replacing it with Elnaj footage.
+- Homepage hero footage is the user-supplied `6506380_Seafood_Bbq_1280x720.mp4`, served locally as `public/seafood-bbq.mp4` via `src/components/HeroVideo.tsx`. Its matching poster is extracted from the footage at one second: `public/seafood-bbq-poster.jpg`.
+- Keep the poster fallback, muted looping inline autoplay on fresh visits, pause/play control, and reduced-motion/data-saver handling. The new footage replaces the old Mixkit CDN video; no external video host is required.
 
 ## Reservations
 - `/reservation` collects staff-confirmed requests; `/admin/reservations` is the protected review queue. Submitted requests are PENDING, not guaranteed bookings. Times are Africa/Accra (GMT).
