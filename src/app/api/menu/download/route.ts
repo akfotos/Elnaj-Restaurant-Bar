@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   const scope = request.nextUrl.searchParams.get("scope") ?? "all";
   if (!["all", "food", "drinks"].includes(scope)) return NextResponse.json({ error: "Invalid menu scope" }, { status: 400 });
-  if (scope === "drinks") return NextResponse.json({ error: "No drinks are included in the photographed menu." }, { status: 404 });
+  if (scope === "drinks") return NextResponse.json({ error: "No drinks are included in the current menu." }, { status: 404 });
   try {
     const queriedProducts = await db.product.findMany({
       where: { isActive: true, slug: { in: photographedMenuProducts().map((product) => product.slug) } },

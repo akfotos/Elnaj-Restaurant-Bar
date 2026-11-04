@@ -43,7 +43,7 @@ export default async function Catalog({ searchParams, title }: {
     : products;
 
   const selectedCategory = categories.find((item) => item.slug === category);
-  const introduction = selectedCategory ? `Explore ${selectedCategory.name.toLowerCase()}, compare current prices and open a dish for its options. Ingredients and dietary information are available below each description.` : "Browse Elnaj’s menu in the same order as our printed sheets. Compare prices, open a dish for its details or keep a PDF for later.";
+  const introduction = selectedCategory ? `Explore ${selectedCategory.name.toLowerCase()}, compare current prices and open a dish for its options. Ingredients and dietary information are available below each description.` : "Browse Elnaj’s menu by section, from salads and sauces to traditional meals and sides. Compare prices, open a dish for its details or keep a PDF for later.";
   const basePath = "/menu";
   const view = sp.view === "cards" ? "cards" : "table";
   const viewHref = (nextView: string) => {

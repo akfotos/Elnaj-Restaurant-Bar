@@ -4,9 +4,7 @@ import { arrangeMenuProducts, photographedMenuCategories, photographedMenu, phot
 import { menuPrice, requiresPriceConfirmation } from "./menu-pricing";
 import { createMenuPdf } from "./menu-pdf";
 
-test("only photographed dishes appear, with sheet names and order regardless of database names and categories", () => {
-  const categories = photographedMenuCategories();
-  assert.deepEqual(categories.map((category) => category.name), ["Continental", "Rice Dishes", "Continental", "Sauces", "Local", "Sunday Special", "Extras"]);
+test("only PDF dishes appear, with PDF names and order regardless of database names and categories", () => {
   const products = photographedMenuProducts();
   const databaseProducts = products.map((product) => ({ ...product, name: "Old name", categoryId: "old-category", id: product.slug, stock: 7 }));
   const drink = { ...databaseProducts[0], slug: "water", name: "Water" };
@@ -21,47 +19,43 @@ test("only photographed dishes appear, with sheet names and order regardless of 
   assert.deepEqual(arrangeMenuProducts([databaseProducts[1], databaseProducts[0]]).map((product) => product.slug), products.slice(0, 2).map((product) => product.slug));
 });
 
-test("section contents retain the sheet sequence, including the repeated Continental heading and continuation of Extras", () => {
-  assert.deepEqual(photographedMenu.map((section) => section.entries.map((entry) => entry.name)), [
-    ["Chicken in Chilli Tomato Sauce", "Grilled or Fried Chicken", "Boneless Chicken in Garlic Butter Sauce", "Fillet Fish in Tomato Sauce", "Red Snapper in Chilli Tomato Sauce", "Thai Rice Chicken", "Thai Rice Beef", "Thai Rice Assorted", "Thai Rice Seafood"],
-    ["Octopus Mixed Fried Rice or Jollof", "Shrimps Mixed Fried Rice or Jollof", "Shrimps & Octopus Fried Rice or Jollof", "Beef Mixed Fried Rice or Jollof", "Chicken mixed with Fried Rice or Jollof", "Chicken & Beef Mixed Fried Rice or Jollof", "Chef’s Special Assorted Rice or Jollof"],
-    ["Plain Omelette", "Spanish Omelette"],
-    ["Vegetable Mixed Spaghetti", "Beef Mixed Spaghetti", "Chicken Mixed Spaghetti", "Shrimps Mixed Spaghetti", "Octopus Mixed Spaghetti", "Chicken & Beef Mixed Spaghetti", "Shrimps & Octopus Mixed Spaghetti", "Chef’s Special", "Seafood (Shrimps Octopus & Fish)"],
-    ["Red Snapper with Jollof or Fried Rice", "Red Snapper with Banku", "Tilapia with Banku", "Banku and Okro", "Palava Sauce with Yam", "Palava Sauce with Plain Rice", "Egg Stew with Yam & Plain Rice", "Egg Stew with Plain Rice", "Egg Stew Only", "Catfish"],
-    ["Goat Neat", "Cow Meat", "Cow Intestine", "Goat Intestine", "Tuna", "Salmon", "Chicken Wings", "Fresh Tilapia", "Boiled Egg", "Fufu", "Omo Tuo"],
-    ["Beef Sauce Only", "Chicken Sauce Only", "Fish Sauce Only", "Octopus Sauce Only", "Shrimps Sauce Only", "Shrimps & Octopus", "Shrimps, Octopus & Fish Sauce", "Chef’s Special Sauce Only", "Chicken Only", "Fried Rice Only", "Jollof Only", "Totato Chips Only", "Yam Chips Only", "Plain Rice Only", "Shito", "Red Fish Only", "Tilapia Only", "Boiled Yam Only", "Tossed Vegetables", "Okro Only", "Palava Sauce Only", "Banku Only"],
+test("PDF sections, names, prices and sequence replace the old photographed menu", () => {
+  assert.deepEqual(photographedMenuCategories().map((category) => category.name), ["Salad", "Sauces", "Continental", "Thai Rice Dishes", "Rice Dishes", "Spaghetti Dishes", "Local Dishes & Traditional Meals", "Sunday Special", "Extras & Sauces Only", "Portions & Sides Only"]);
+  assert.deepEqual(photographedMenu.map((section) => section.entries.map(({ name, price }) => [name, price])), [
+    [["Tuna salad", 50], ["Chicken salad", 50], ["Vegetable salad", 45], ["Chef’s special salad", 60]],
+    [["Chicken", 95], ["Beef sauce", 100], ["Fish sauce", 100], ["Shrimp sauce", 110], ["Octopus sauce", 110], ["Shrimps & Octopus", 120], ["Shrimp, Octopus & Fish", 130], ["Chef’s Special", 110]],
+    [["Chicken in Chilli Tomato Sauce", 100], ["Grilled or Fried Chicken", 95], ["Boneless Chicken in Garlic Butter Sauce", 120], ["Fillet Fish in Tomato Sauce", 110], ["Red Snapper in Chilli Tomato Sauce", 100], ["Plain Omelette", 40], ["Spanish Omelette", 45]],
+    [["Thai Rice Chicken", 120], ["Thai Rice Beef", 130], ["Thai Rice Assorted", 150], ["Thai Rice Seafood", 200]],
+    [["Octopus Mixed Fried Rice or Jollof", 120], ["Shrimps Mixed Fried Rice or Jollof", 120], ["Shrimps & Octopus Fried Rice or Jollof", 130], ["Beef Mixed Fried Rice or Jollof", 110], ["Chicken Mixed with Fried Rice or Jollof", 100], ["Chicken & Beef Mixed Fried Rice or Jollof", 120], ["Chef’s Special Assorted Rice or Jollof", 130]],
+    [["Vegetable Mixed Spaghetti", 60], ["Beef Mixed Spaghetti", 100], ["Chicken Mixed Spaghetti", 95], ["Shrimps Mixed Spaghetti", 120], ["Octopus Mixed Spaghetti", 110], ["Chicken & Beef Mixed Spaghetti", 100], ["Shrimps & Octopus Mixed Spaghetti", 110], ["Chef’s Special Spaghetti", 110], ["Seafood Spaghetti", 130]],
+    [["Red Snapper with Jollof or Fried Rice", 90], ["Red Snapper with Banku", 80], ["Tilapia with Banku", 120], ["Banku and Okro", 80], ["Palava Sauce with Yam", 85], ["Palava Sauce with Plain Rice", 90], ["Egg Stew with Yam & Plain Rice", 90], ["Egg Stew with Plain Rice", 100], ["Egg Stew Only", 80], ["Catfish", 180]],
+    [["Goat Meat", 40], ["Cow Meat", 30], ["Cow Intestine", 20], ["Goat Intestine", 30], ["Tuna", 20], ["Salmon", 20], ["Chicken Wings", 25], ["Fresh Tilapia", 50], ["Boiled Egg", 5], ["Fufu", 20], ["Omo Tuo", 5]],
+    [["Beef Sauce Only", 85], ["Chicken Sauce Only", 80], ["Fish Sauce Only", 75], ["Octopus Sauce Only", 90], ["Shrimps Sauce Only", 90], ["Shrimps & Octopus", 100], ["Shrimps, Octopus & Fish Sauce", 110], ["Chef’s Special Sauce Only", 100], ["Okro Only", 80], ["Palava Sauce Only", 70]],
+    [["Plain Rice Only", 30], ["Fried Rice Only", 35], ["Jollof Only", 40], ["Potato Chips Only", 30], ["Yam Chips Only", 25], ["Boiled Yam Only", 25], ["Chicken Only", 50], ["Red Fish Only", 70], ["Tilapia Only", 100], ["Tossed Vegetables", 25], ["Shito", 5], ["Banku Only", 5]],
   ]);
 });
 
-test("photographed dishes have unique stable slugs and positive prices", () => {
+test("PDF dishes have unique stable slugs, including similarly named sauces and extras", () => {
   const products = photographedMenuProducts();
-  assert.equal(products.length, 70);
+  assert.equal(products.length, 82);
   assert.equal(new Set(products.map((product) => product.slug)).size, products.length);
   assert.ok(products.every((product) => Number.isFinite(product.price) && product.price > 0));
-  assert.equal(products.find((product) => product.name === "Tilapia with Banku")?.slug, "banku-tilapia");
+  for (const [name, slug] of [["Tilapia with Banku", "banku-tilapia"], ["Chef’s Special Spaghetti", "chef-s-special"], ["Seafood Spaghetti", "seafood"], ["Chicken Mixed with Fried Rice or Jollof", "chicken-mixed-fried-rice-or-jollof"], ["Goat Meat", "goat-meat"], ["Potato Chips Only", "potato-chips-only"]]) {
+    assert.equal(products.find((product) => product.name === name)?.slug, slug);
+  }
+  assert.deepEqual(products.filter((product) => product.name === "Shrimps & Octopus").map(({ price, categorySlug }) => [price, categorySlug]), [[120, "sauces"], [100, "extras"]]);
+  assert.ok(products.every((product) => !product.unitLabel.includes("Provisional")));
 });
 
-test("handwritten corrections and authorised provisional prices are retained", () => {
+test("only the two PDF price ranges require confirmation instead of fixed-price checkout", () => {
   const products = photographedMenuProducts();
-  for (const [name, expected] of [["Chicken in Chilli Tomato Sauce", 100], ["Grilled or Fried Chicken", 95], ["Beef Sauce Only", 85], ["Chicken Sauce Only", 80], ["Okro Only", 80], ["Palava Sauce Only", 70], ["Goat Intestine", 30], ["Tilapia with Banku", 120], ["Banku and Okro", 80]] as const) {
-    assert.equal(products.find((product) => product.name === name)?.price, expected, name);
-  }
-});
-
-test("price ranges remain ranges and cannot be treated as fixed checkout prices", () => {
-  const products = photographedMenuProducts();
-  for (const [name, expected] of [["Catfish", "GHS 180–200"], ["Fufu", "GHS 20–30"]]) {
-    const product = products.find((item) => item.name === name)!;
-    assert.equal(menuPrice(product), expected);
-    assert.ok(requiresPriceConfirmation(product));
-  }
-  for (const product of products.filter((item) => item.provisional)) assert.ok(requiresPriceConfirmation(product));
+  assert.deepEqual(products.filter(requiresPriceConfirmation).map((product) => [product.name, menuPrice(product)]), [["Catfish", "GHS 180–200"], ["Fufu", "GHS 20–30"]]);
   assert.equal(menuPrice({ price: 30, unitLabel: "each" }), "GHS 30.00");
   assert.equal(requiresPriceConfirmation({ unitLabel: "per kg" }), false);
 });
 
-test("the complete photographed menu generates a PDF including ranged and provisional prices", async () => {
+test("the replacement menu generates a PDF with all 82 items", async () => {
   const products = photographedMenuProducts();
-  const pdf = await createMenuPdf(photographedMenu.map((section) => ({ name: section.name, products: products.filter((product) => product.categorySlug === section.slug).map((product) => ({ ...product, ingredients: null, allergens: null, dietaryLabels: null, trackStock: false, stock: 0, variants: [] })) })), "Food Menu");
+  const pdf = await createMenuPdf(photographedMenu.map((section) => ({ name: section.name, products: products.filter((product) => product.categorySlug === section.slug).map((product) => ({ ...product, ingredients: null, allergens: null, dietaryLabels: null, trackStock: false, stock: 0, variants: [] })) })), "Menu");
   assert.ok(pdf.length > 1000);
 });

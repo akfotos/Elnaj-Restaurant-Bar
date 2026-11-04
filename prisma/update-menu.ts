@@ -5,7 +5,7 @@ import { photographedMenu, photographedMenuProducts } from "../src/lib/photograp
 async function main() {
   const products = photographedMenuProducts();
   if (new Set(products.map((product) => product.slug)).size !== products.length) throw new Error("Duplicate menu slugs");
-  console.table(products.map(({ name, price, unitLabel, provisional }) => ({ name, price, unitLabel, provisional })));
+  console.table(products.map(({ name, categorySlug, price, unitLabel }) => ({ name, categorySlug, price, unitLabel })));
   if (!process.argv.includes("--apply")) {
     console.log(`Preview only: ${products.length} dishes. Run npx tsx prisma/update-menu.ts --apply to upsert this menu. Existing drinks, unrelated dishes, orders and stock are preserved.`);
     return;
