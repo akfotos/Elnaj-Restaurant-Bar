@@ -7,7 +7,6 @@ const LINKS = [
   ["Home", "/"],
   ["About", "/about"],
   ["Menu", "/menu"],
-  ["Book a table", "/reservation"],
   ["Events", "/events"],
   ["Contact", "/support"],
 ];
@@ -15,7 +14,7 @@ const LINKS = [
 export default function HeaderNav() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Main navigation" className="hidden xl:flex items-center gap-1 mx-auto px-2 py-1">
+    <nav aria-label="Main navigation" className="site-header-nav">
       {LINKS.map(([label, href]) => {
         const active = href === "/" ? pathname === "/" : pathname.startsWith(href) || (href === "/menu" && pathname.startsWith("/product/"));
         return (
@@ -23,9 +22,7 @@ export default function HeaderNav() {
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            className={`text-sm px-4 py-2 transition ${
-              active ? "text-white underline underline-offset-8 decoration-white/40" : "text-white/60 hover:text-white"
-            }`}
+            className="site-header-nav-link"
           >
             {label}
           </Link>

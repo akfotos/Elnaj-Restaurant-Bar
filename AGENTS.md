@@ -4,6 +4,7 @@ Next.js 15 (App Router) + TypeScript + Tailwind v4 + Prisma 6 + SQLite. Zustand 
 
 ## Design direction
 - Keep Elnaj’s ivory-and-burgundy identity and editorial typography. Prefer spacious, minimalist layouts with generous gutters, restrained decoration, borderless product cards, and progressive disclosure for secondary controls.
+- Storefront navigation uses the full-width ivory `.site-header`, a burgundy editorial wordmark, underlined active desktop tabs, and a dedicated booking action. Desktop navigation begins at 1280px; smaller screens retain a direct Menu link and an accessible disclosure panel that closes on Escape or outside click. Header styles use explicit brand colors so system dark mode does not reduce contrast.
 
 - Keep food and drink listings, category browsing, prices and menu downloads on `/menu`. Other pages should link there instead of repeating menu previews or recommendations; individual product pages remain for details and purchasing.
 
@@ -14,7 +15,7 @@ Next.js 15 (App Router) + TypeScript + Tailwind v4 + Prisma 6 + SQLite. Zustand 
 
 ## Hero media
 - Homepage hero footage is the user-supplied `6506380_Seafood_Bbq_1280x720.mp4`, served locally as `public/seafood-bbq.mp4` via `src/components/HeroVideo.tsx`. Its matching poster is extracted from the footage at one second: `public/seafood-bbq-poster.jpg`.
-- Keep the poster fallback, muted looping inline autoplay on fresh visits, pause/play control, and reduced-motion/data-saver handling. The new footage replaces the old Mixkit CDN video; no external video host is required.
+- Keep the poster fallback, muted looping inline autoplay on fresh visits, pause/play control, and reduced-motion/data-saver handling. The new footage replaces the old Mixkit CDN video; no external video host is required. At desktop widths (1024px and above), the hero fills at least the viewport height without the former 820px cap; mobile sizing remains separate.
 
 ## Reservations
 - `/reservation` collects staff-confirmed requests; `/admin/reservations` is the protected review queue. Submitted requests are PENDING, not guaranteed bookings. Times are Africa/Accra (GMT).
