@@ -366,7 +366,6 @@ input, select, textarea {
 .site-mobile-panel nav { max-width: 720px; margin-inline: auto; }
 .site-mobile-eyebrow { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #8b6c54; margin-bottom: 16px; }
 .site-mobile-link { display: flex; align-items: center; justify-content: space-between; padding-block: 13px; border-bottom: 1px solid #e8dfd3; font-family: Georgia, serif; font-size: 22px; color: #30231f; }
-.site-mobile-link > span { font-family: Arial, sans-serif; font-size: 14px; color: #ad8158; }
 .site-mobile-link:hover, .site-mobile-link[aria-current] { color: #800020; }
 .site-mobile-account { display: flex; flex-wrap: wrap; gap: 12px 28px; padding-top: 24px; font-size: 13px; color: #800020; }
 @media (min-width: 640px) {

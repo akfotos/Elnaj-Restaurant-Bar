@@ -61,7 +61,7 @@ export default function MobileMenu({ signedIn, isAdmin, name }: { signedIn: bool
               const active = href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`) || (href === "/menu" && pathname.startsWith("/product/"));
               return (
                 <Link key={href} href={href} onClick={() => setOpen(false)} aria-current={active ? "page" : undefined} className="site-mobile-link">
-                  {label}<span aria-hidden="true">↗</span>
+                  {label}
                 </Link>
               );
             })}
